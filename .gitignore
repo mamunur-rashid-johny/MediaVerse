@@ -1,0 +1,50 @@
+# Gradle files
+.gradle/
+build/
+**/build/
+
+# Local configuration file (sdk path, keystore path, etc.)
+local.properties
+
+# Log files
+*.log
+
+# Android Studio
+.idea/
+*.iml
+.gradle/
+captures/
+externalNativeBuild/
+.cxx/
+
+# Generated files
+bin/
+gen/
+out/
+
+# Android specific
+*.apk
+*.ap_
+*.aab
+
+# Keystore files - DO NOT COMMIT THESE
+*.jks
+*.keystore
+
+# Google Services (contains sensitive info)
+google-services.json
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Kotlin/Java
+*.class
+
+# Cache
+.cache/
+
+compose-metrics/
+compose-reports/
+
+obj/
