@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 
@@ -118,6 +119,11 @@ dependencies {
 
     //<editor-fold desc = "Exo Player">
     implementation(libs.bundles.exo.player)
+    //</editor-fold>
+
+    //<editor-fold desc = "Room Database">
+    implementation(libs.bundles.room.db)
+    ksp(libs.room.db.compiler)
     //</editor-fold>
 
 }

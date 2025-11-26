@@ -14,4 +14,4 @@ data class Podcast(
     val language: String,
     val type: String,
     val audioLengthInSec: Int
-    )
+)

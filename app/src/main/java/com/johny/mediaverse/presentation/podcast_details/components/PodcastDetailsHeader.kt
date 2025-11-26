@@ -65,7 +65,7 @@ fun PodcastDetailsHeader(
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.Center
             ),
-            previewPlaceholder = painterResource(R.drawable.placeholder)
+            previewPlaceholder = painterResource(R.drawable.podcast_placeholder)
         )
 
         Text(

@@ -1,35 +1,31 @@
-# Gradle files
-.gradle/
-build/
-**/build/
+# Built application files
+*.apk
+*.aar
+*.ap_
+*.aab
 
-# Local configuration file (sdk path, keystore path, etc.)
-local.properties
+# Files for the ART/Dalvik VM
+*.dex
 
-# Log files
-*.log
-
-# Android Studio
-.idea/
-*.iml
-.gradle/
-captures/
-externalNativeBuild/
-.cxx/
+# Java class files
+*.class
 
 # Generated files
 bin/
 gen/
 out/
+build/
+.gradle/
+.idea/
 
-# Android specific
-*.apk
-*.ap_
-*.aab
+# Local configuration file (sdk.dir)
+local.properties
 
-# Keystore files - DO NOT COMMIT THESE
-*.jks
-*.keystore
+# Android Studio navigations
+*.navigation
+captures/
+.externalNativeBuild/
+.cxx/
 
 # Google Services (contains sensitive info)
 google-services.json
@@ -37,9 +33,6 @@ google-services.json
 # OS specific
 .DS_Store
 Thumbs.db
-
-# Kotlin/Java
-*.class
 
 # Cache
 .cache/

@@ -2,6 +2,7 @@ package com.johny.mediaverse
 
 import android.app.Application
 import com.johny.mediaverse.di.appModule
+import com.johny.mediaverse.di.databaseModule
 import com.johny.mediaverse.di.repositoryModule
 import com.johny.mediaverse.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -16,7 +17,7 @@ class MediaVerseApp: Application() {
         startKoin {
             androidLogger()
             androidContext(this@MediaVerseApp)
-            modules(appModule, repositoryModule, viewModelModule)
+            modules(appModule, databaseModule,repositoryModule, viewModelModule)
         }
     }
 }

@@ -1,8 +1,10 @@
 package com.johny.mediaverse.di
 
+import com.johny.mediaverse.data.repository.BookmarkRepositoryImp
 import com.johny.mediaverse.data.repository.ListenNoteApiImp
 import com.johny.mediaverse.data.repository.PodcastDetailsRepositoryImp
 import com.johny.mediaverse.data.repository.PodcastRepositoryImp
+import com.johny.mediaverse.domain.repository.BookmarkRepository
 import com.johny.mediaverse.domain.repository.ListenNoteApi
 import com.johny.mediaverse.domain.repository.PodcastDetailRepository
 import com.johny.mediaverse.domain.repository.PodcastRepository
@@ -14,4 +16,5 @@ val repositoryModule = module {
     singleOf(::ListenNoteApiImp).bind<ListenNoteApi>()
     singleOf(::PodcastRepositoryImp).bind<PodcastRepository>()
     singleOf(::PodcastDetailsRepositoryImp).bind<PodcastDetailRepository>()
+    singleOf(::BookmarkRepositoryImp).bind<BookmarkRepository>()
 }

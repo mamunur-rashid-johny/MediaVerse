@@ -40,9 +40,33 @@ fun Long.toDateString(): String? {
     }
 }
 
+
+/*
+*Pattern explanation:
+// MMM   = Short Month (May)
+// dd    = Day (12)
+// yyyy  = Year (2018)
+// 'at'  = Literal text " at "
+// hh    = Hour in 12-hour format (11)
+// .     = The dot separator you requested
+// mm    = Minute (00)
+// a     = AM/PM marker
+* @return format of time mils to May 12, 2018 at 11.00 AM
+* */
+fun Long.toDateFormatString(): String{
+    return try {
+        val instant = Instant.ofEpochMilli(this)
+        val zoneDateTime = instant.atZone(ZoneId.systemDefault())
+        val formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy 'at' hh.mm a", Locale.US)
+        zoneDateTime.format(formatter)
+    }catch (_: Exception){
+        ""
+    }
+}
+
 fun Int.toSecondToMinute(): String {
     val minutes = this / 60
-    return String.format("%02d", minutes)
+    return String.format(Locale.getDefault(),"%02d", minutes)
 }
 
 fun Modifier.shimmerEffect(): Modifier = composed {
@@ -83,5 +107,5 @@ fun Long.formatTime(): String {
     val totalSeconds = this / 1000
     val minutes = totalSeconds / 60
     val seconds = totalSeconds % 60
-    return String.format("%02d:%02d", minutes, seconds)
+    return String.format(Locale.getDefault(),"%02d:%02d", minutes, seconds)
 }

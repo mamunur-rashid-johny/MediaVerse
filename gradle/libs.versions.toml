@@ -20,6 +20,8 @@ paging-runtime = "3.3.6"
 paging-compose = ":3.4.0-alpha04"
 landscapist-coil = "2.6.1"
 exo-player = "1.8.0"
+ksp = "2.1.0-1.0.29"
+room_database = "2.8.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -74,12 +76,19 @@ exo-player-ui-compose = { group = "androidx.media3", name = "media3-ui-compose",
 exo-player-common = { group = "androidx.media3", name = "media3-common", version.ref = "exo-player" }
 media-session = { group = "androidx.media3", name = "media3-session", version.ref = "exo-player" }
 
+#room database
+room-db = {group="androidx.room",name="room-runtime",version.ref="room_database"}
+room-db-compiler = {group="androidx.room",name="room-compiler",version.ref="room_database"}
+room-db-ext = {group="androidx.room",name="room-ktx",version.ref="room_database"}
+room-db-paging = {group="androidx.room",name="room-paging",version.ref="room_database"}
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [bundles]
 compose = [
@@ -120,6 +129,12 @@ exo-player = [
     "exo-player-ui-compose",
     "exo-player-common",
     "media-session"
+]
+
+room-db = [
+    "room-db",
+    "room-db-ext",
+    "room-db-paging"
 ]
 
 

@@ -6,13 +6,13 @@ import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.johny.mediaverse.core.navigation.Destination
-import com.johny.mediaverse.domain.model.podcast.Podcast
+import com.johny.mediaverse.presentation.podcast.ui_model.PodcastUIModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PodcastRoute(navController: NavController) {
     val viewModel: PodcastViewModel = koinViewModel()
-    val podcast: LazyPagingItems<Podcast> = viewModel.podcastList.collectAsLazyPagingItems()
+    val podcast: LazyPagingItems<PodcastUIModel> = viewModel.podcast.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { event ->
@@ -25,7 +25,7 @@ fun PodcastRoute(navController: NavController) {
     }
 
     PodcastScreen(
-        podcasts = podcast,
+        podcastsUiModel = podcast,
         onIntent = viewModel::onIntent
     )
 }

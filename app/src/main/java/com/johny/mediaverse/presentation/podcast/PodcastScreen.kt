@@ -11,16 +11,16 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
-import com.johny.mediaverse.domain.model.podcast.Podcast
 import com.johny.mediaverse.presentation.podcast.components.ErrorRow
 import com.johny.mediaverse.presentation.podcast.components.FullScreenError
 import com.johny.mediaverse.presentation.podcast.components.LoadingRow
 import com.johny.mediaverse.presentation.podcast.components.PodcastItem
 import com.johny.mediaverse.presentation.podcast.components.PodcastItemShimmer
+import com.johny.mediaverse.presentation.podcast.ui_model.PodcastUIModel
 
 @Composable
 fun PodcastScreen(
-    podcasts: LazyPagingItems<Podcast>,
+    podcastsUiModel: LazyPagingItems<PodcastUIModel>,
     onIntent: (PodcastIntent) -> Unit
 ) {
     LazyColumn(
@@ -29,28 +29,30 @@ fun PodcastScreen(
             .padding(PaddingValues(12.dp)),
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
     ) {
-        if (podcasts.loadState.refresh is LoadState.Loading) {
+        if (podcastsUiModel.loadState.refresh is LoadState.Loading) {
             items(10) {
                 PodcastItemShimmer()
                 HorizontalDivider()
             }
         } else {
             items(
-                count = podcasts.itemCount,
-                key = podcasts.itemKey { it.id }
+                count = podcastsUiModel.itemCount,
+                key = podcastsUiModel.itemKey { it.podcast.id }
             ) { index ->
-                val podcast = podcasts[index]
+                val podcast = podcastsUiModel[index]
                 podcast?.let {
                     PodcastItem(
-                        podcast = it,
-                        onItemClick = { p -> onIntent(PodcastIntent.OnItemClick(p)) }
+                        podcastUi = it,
+                        onItemClick = { p -> onIntent(PodcastIntent.OnItemClick(p)) },
+                        onAddBookmark = {p -> onIntent(PodcastIntent.OnAddBookMark(p))},
+                        onRemoveBookmark = {id -> onIntent(PodcastIntent.OnRemoveBookmark(id)) }
                     )
                     HorizontalDivider()
                 }
             }
         }
 
-        podcasts.apply {
+        podcastsUiModel.apply {
             when {
                 loadState.append is LoadState.Loading -> {
                     item { LoadingRow() }
