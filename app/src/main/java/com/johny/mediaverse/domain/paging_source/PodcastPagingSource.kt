@@ -1,13 +1,12 @@
-package com.johny.mediaverse.data.paging_source
+package com.johny.mediaverse.domain.paging_source
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.johny.mediaverse.core.domain.utils.Result
+import com.johny.mediaverse.core.utils.Constants.Miscellaneous.STARTING_PAGE_INDEX
 import com.johny.mediaverse.data.mapper.toPodcasts
 import com.johny.mediaverse.domain.model.podcast.Podcast
 import com.johny.mediaverse.domain.repository.ListenNoteApi
-
-private const val STARTING_PAGE_INDEX = 1
 
 class PodcastPagingSource(private val api: ListenNoteApi) : PagingSource<Int, Podcast>() {
     override fun getRefreshKey(state: PagingState<Int, Podcast>): Int? {

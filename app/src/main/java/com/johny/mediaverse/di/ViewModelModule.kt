@@ -4,6 +4,7 @@ import com.johny.mediaverse.presentation.MainViewModel
 import com.johny.mediaverse.presentation.audio_player.AudioPlayerViewModel
 import com.johny.mediaverse.presentation.bookmark.BookmarkViewModel
 import com.johny.mediaverse.presentation.movie.MovieViewModel
+import com.johny.mediaverse.presentation.movie_details.MovieDetailsViewModel
 import com.johny.mediaverse.presentation.on_board.OnBoardViewModel
 import com.johny.mediaverse.presentation.podcast.PodcastViewModel
 import com.johny.mediaverse.presentation.podcast_details.PodcastDetailsViewModel
@@ -18,4 +19,6 @@ val viewModelModule = module {
     viewModelOf(::PodcastDetailsViewModel)
     viewModelOf(::AudioPlayerViewModel)
     viewModelOf(::BookmarkViewModel)
+    viewModelOf(::MovieViewModel)
+    viewModelOf(::MovieDetailsViewModel)
 }

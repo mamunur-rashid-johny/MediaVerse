@@ -2,10 +2,14 @@ package com.johny.mediaverse.di
 
 import com.johny.mediaverse.data.repository.BookmarkRepositoryImp
 import com.johny.mediaverse.data.repository.ListenNoteApiImp
+import com.johny.mediaverse.data.repository.MovieDbApiImp
 import com.johny.mediaverse.data.repository.PodcastDetailsRepositoryImp
 import com.johny.mediaverse.data.repository.PodcastRepositoryImp
 import com.johny.mediaverse.domain.repository.BookmarkRepository
 import com.johny.mediaverse.domain.repository.ListenNoteApi
+import com.johny.mediaverse.domain.repository.MovieDbApi
+import com.johny.mediaverse.domain.repository.MovieRepository
+import com.johny.mediaverse.data.repository.MovieRepositoryImp
 import com.johny.mediaverse.domain.repository.PodcastDetailRepository
 import com.johny.mediaverse.domain.repository.PodcastRepository
 import org.koin.core.module.dsl.singleOf
@@ -17,4 +21,6 @@ val repositoryModule = module {
     singleOf(::PodcastRepositoryImp).bind<PodcastRepository>()
     singleOf(::PodcastDetailsRepositoryImp).bind<PodcastDetailRepository>()
     singleOf(::BookmarkRepositoryImp).bind<BookmarkRepository>()
+    singleOf(::MovieDbApiImp).bind<MovieDbApi>()
+    singleOf(::MovieRepositoryImp).bind<MovieRepository>()
 }

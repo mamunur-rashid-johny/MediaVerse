@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.johny.mediaverse.data.local.dao.PodcastDao
 import com.johny.mediaverse.data.mapper.toPodcastEntity
-import com.johny.mediaverse.data.paging_source.PodcastPagingSource
+import com.johny.mediaverse.domain.paging_source.PodcastPagingSource
 import com.johny.mediaverse.domain.model.podcast.Podcast
 import com.johny.mediaverse.domain.repository.ListenNoteApi
 import com.johny.mediaverse.domain.repository.PodcastRepository

@@ -13,6 +13,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -40,6 +41,11 @@ fun Long.toDateString(): String? {
     }
 }
 
+enum class DateFormat(val format: String){
+    YYYY("yyyy"),
+    MMM_DD_YYYY_STRING_HH_MM_A("MMM dd, yyyy 'at' hh.mm a"),
+    YYYY_MM_DD("yyyy-MM-dd")
+}
 
 /*
 *Pattern explanation:
@@ -53,13 +59,24 @@ fun Long.toDateString(): String? {
 // a     = AM/PM marker
 * @return format of time mils to May 12, 2018 at 11.00 AM
 * */
-fun Long.toDateFormatString(): String{
+fun Long.toDateFormatString(dateFormat: DateFormat): String{
     return try {
         val instant = Instant.ofEpochMilli(this)
         val zoneDateTime = instant.atZone(ZoneId.systemDefault())
-        val formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy 'at' hh.mm a", Locale.US)
+        val formatter = DateTimeFormatter.ofPattern(dateFormat.format, Locale.US)
         zoneDateTime.format(formatter)
     }catch (_: Exception){
+        ""
+    }
+}
+
+fun String.toFormattedDate(dateFormat:DateFormat): String {
+    return try {
+        val parsedDate = LocalDate.parse(this)
+        val formatter = DateTimeFormatter.ofPattern(dateFormat.format, Locale.getDefault())
+        parsedDate.format(formatter)
+    } catch (ex: Exception) {
+        ex.printStackTrace()
         ""
     }
 }

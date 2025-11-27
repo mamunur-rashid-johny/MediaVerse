@@ -13,21 +13,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.johny.mediaverse.core.navigation.Destination
+import com.johny.mediaverse.core.presentation.utils.ObserveAsEvent
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun MovieRoute(navController: NavController) {
     val viewModel: MovieViewModel = koinViewModel()
+    val moviesPager = viewModel.movies.collectAsLazyPagingItems()
     var showExitDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val activity = context as? android.app.Activity
 
-    LaunchedEffect(Unit) {
-        viewModel.effect.collect { effect ->
-            navController.navigate(Destination.OnBoardRoute){
-                popUpTo(Destination.MovieRoute) {
-                    inclusive = true
+    ObserveAsEvent(events = viewModel.effect) { effect ->
+        when(effect){
+            is MovieSideEffect.NavigateToDetails -> {
+                navController.navigate(Destination.MovieDetailRoute(effect.movieId))
+            }
+            MovieSideEffect.NavigateToOnboarding -> {
+                navController.navigate(Destination.OnBoardRoute){
+                    popUpTo(Destination.MovieRoute) {
+                        inclusive = true
+                    }
                 }
             }
         }
@@ -37,7 +45,10 @@ internal fun MovieRoute(navController: NavController) {
         showExitDialog = true
     }
 
-    MovieScreen(onIntent = viewModel::onIntent)
+    MovieScreen(
+        movies = moviesPager,
+        onIntent = viewModel::onIntent
+    )
 
     if (showExitDialog) {
         AlertDialog(

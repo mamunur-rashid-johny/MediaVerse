@@ -10,14 +10,14 @@ import androidx.compose.ui.Modifier
 import com.johny.mediaverse.presentation.ui.theme.AppTypography
 
 @Composable
-fun MovieDetailsScreen(modifier: Modifier = Modifier) {
+fun MovieDetailsScreen(modifier: Modifier = Modifier,movieId: Int) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = "Movie Details Screen",
+            text = "Movie Details Screen \n $movieId",
             style = AppTypography.bodyLarge
         )
     }

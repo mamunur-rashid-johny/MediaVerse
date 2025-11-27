@@ -39,8 +39,10 @@ android {
 
         //Code to Fetch Keys or Other Credentials
         val movieDbApiKey = properties.getProperty("MOVIE_DB_API_KEY", "")
+        val movieDbAccessToken = properties.getProperty("MOVIE_DB_ACCESS_TOKEN","")
         val listenNoteApiKey = properties.getProperty("LISTEN_NOTE_API_KEY","")
         buildConfigField("String", "MOVIE_DB_API_KEY", "\"$movieDbApiKey\"")
+        buildConfigField("String", "MOVIE_DB_ACCESS_TOKEN", "\"$movieDbAccessToken\"")
         buildConfigField("String", "LISTEN_NOTE_API_KEY", "\"$listenNoteApiKey\"")
     }
 

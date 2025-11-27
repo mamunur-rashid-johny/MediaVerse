@@ -14,5 +14,13 @@ object Constants {
 
     object Miscellaneous{
         const val PREF_NAME = "MEDIA_VERSE_APP"
+        const val STARTING_PAGE_INDEX = 1
+        const val DATABASE_NAME = "media_verse_db"
+    }
+
+    object MovieDbUrl{
+        const val MOVIE_DB_BASE_URL = "https://api.themoviedb.org/3/"
+        const val DISCOVER_MOVIE = "discover/movie"
+        const val IMAGE_ROOT_PATH ="https://image.tmdb.org/t/p/"
     }
 }
