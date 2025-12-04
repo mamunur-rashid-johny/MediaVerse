@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.johny.mediaverse.core.navigation.Destination
 import com.johny.mediaverse.core.navigation.Destination.AudioPlayerRoute
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -15,7 +16,7 @@ internal fun PodcastDetailsRoute(navController: NavController) {
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
-            when(effect){
+            when (effect) {
                 is PodcastDetailsEffect.NavigateToAudioPlayer -> {
                     navController.navigate(
                         AudioPlayerRoute(effect.episodeModel)
@@ -24,6 +25,15 @@ internal fun PodcastDetailsRoute(navController: NavController) {
 
                 PodcastDetailsEffect.OnBackPressed -> {
                     navController.navigateUp()
+                }
+
+                is PodcastDetailsEffect.NavigateToWebviewEffect -> {
+                    navController.navigate(
+                        Destination.WebViewRoute(
+                            url = effect.url ?: "",
+                            title = effect.title
+                        )
+                    )
                 }
             }
         }

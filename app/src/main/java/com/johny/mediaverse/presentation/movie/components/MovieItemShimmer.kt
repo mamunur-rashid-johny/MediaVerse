@@ -1,27 +1,28 @@
 package com.johny.mediaverse.presentation.movie.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.johny.mediaverse.presentation.ui.theme.AppTypography
 import com.johny.mediaverse.utils.shimmerEffect
@@ -42,7 +43,10 @@ fun LoadingRow() {
 }
 
 @Composable
-fun FullScreenError(onClickRetry: () -> Unit) {
+fun FullScreenError(
+    message: String?,
+    onClickRetry: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -50,14 +54,17 @@ fun FullScreenError(onClickRetry: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("Failed to load. Check your network.", style = AppTypography.bodyLarge)
+        Text(message?:"Failed to load data.", style = AppTypography.bodyLarge)
         Spacer(Modifier.height(8.dp))
         Button(onClick = onClickRetry) { Text("Retry") }
     }
 }
 
 @Composable
-fun ErrorRow(onClickRetry: () -> Unit) {
+fun ErrorRow(
+    message: String?,
+    onClickRetry: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -66,7 +73,7 @@ fun ErrorRow(onClickRetry: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            "Failed to load more.",
+            message?:"Failed to load more.",
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.bodyLarge
         )
@@ -76,35 +83,49 @@ fun ErrorRow(onClickRetry: () -> Unit) {
     }
 }
 
+
 @Composable
-fun MovieItemShimmer(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp, horizontal = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
+fun MovieGridItemShimmer(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxWidth()
     ) {
         Box(
             modifier = Modifier
-                .size(60.dp)
-                .clip(RoundedCornerShape(10.dp))
+                .fillMaxWidth()
+                .aspectRatio(0.7f)
                 .shimmerEffect()
-        )
-        Spacer(Modifier.width(16.dp))
+        ) {
 
-        Column(modifier = Modifier.weight(1f)) {
-            Box(
+            // Floating Bookmark Button (Top Right)
+            IconButton(
+                onClick = {},
                 modifier = Modifier
-                    .fillMaxWidth(0.7f)
-                    .height(20.dp)
+                    .align(Alignment.TopEnd)
+                    .padding(8.dp)
+                    .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+                    .size(32.dp)
                     .shimmerEffect()
+            ) {
+                Box(
+                    modifier = Modifier.size(18.dp).shimmerEffect(),
+                )
+            }
+        }
+
+        // Text Info Section
+        Column(
+            modifier = Modifier.padding(12.dp)
+        ) {
+            Box(
+                modifier = Modifier.size(width = 50.dp, height = 20.dp).shimmerEffect()
             )
-            Spacer(Modifier.height(8.dp))
+
+            Spacer(modifier = Modifier.height(4.dp))
+
             Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.4f)
-                    .height(16.dp)
-                    .shimmerEffect()
+                modifier = Modifier.size(width = 50.dp, height = 20.dp).shimmerEffect()
             )
         }
     }

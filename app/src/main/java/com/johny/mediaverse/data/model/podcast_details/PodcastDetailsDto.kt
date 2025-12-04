@@ -34,5 +34,5 @@ data class PodcastDetailsDto(
     val total_episodes: Int,
     val type: String,
     val update_frequency_hours: Int,
-    val website: String
+    val website: String?
 )

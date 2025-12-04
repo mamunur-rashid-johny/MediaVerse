@@ -43,6 +43,9 @@ sealed interface Destination {
     @Serializable
     data object SettingsRoute : Destination
 
+    @Serializable
+    data class WebViewRoute(val url: String, val title: String?) : Destination
+
 }
 
 //These Item Used to Create Bottom Navigation Bar

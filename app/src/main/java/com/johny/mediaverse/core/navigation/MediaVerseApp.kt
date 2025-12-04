@@ -21,6 +21,7 @@ import com.johny.mediaverse.presentation.settings.SettingsRoute
 import com.johny.mediaverse.presentation.tv_show.TvShowRoute
 import com.johny.mediaverse.presentation.tv_show_details.TvShowDetailsRoute
 import com.johny.mediaverse.presentation.tv_show_season_details.TvShowSeasonDetailsRoute
+import com.johny.mediaverse.presentation.web_view.WebViewRoute
 import kotlin.reflect.typeOf
 
 
@@ -86,6 +87,9 @@ fun MediaVerseApp(
             )
         ) {
             AudioPlayerRoute(navController = navController)
+        }
+        composable<Destination.WebViewRoute> {
+            WebViewRoute(navController = navController)
         }
     }
 }

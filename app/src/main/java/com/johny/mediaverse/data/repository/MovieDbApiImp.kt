@@ -35,9 +35,9 @@ class MovieDbApiImp(
 }
 
 const val INCLUDE_ADULT = "include_adult"
-const val INCLUDE_ADULT_VALUE = true
+const val INCLUDE_ADULT_VALUE = false
 const val INCLUDE_VIDEO = "include_video"
-const val INCLUDE_VIDEO_VALUE = true
+const val INCLUDE_VIDEO_VALUE = false
 const val LANGUAGE = "language"
 const val LANGUAGE_VALUE = "en-US"
 const val SORT_BY = "sort_by"

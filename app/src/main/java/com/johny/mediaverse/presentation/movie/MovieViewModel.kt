@@ -10,12 +10,14 @@ import com.johny.mediaverse.core.utils.Constants
 import com.johny.mediaverse.data.mapper.toMovieEntity
 import com.johny.mediaverse.domain.model.movie.MovieModel
 import com.johny.mediaverse.domain.repository.MovieRepository
+import com.johny.mediaverse.presentation.movie.MovieSideEffect.*
 import com.johny.mediaverse.presentation.movie.model.MovieModelUi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 class MovieViewModel(
@@ -24,7 +26,9 @@ class MovieViewModel(
 ) : ViewModel() {
 
     val moviesFlow: Flow<PagingData<MovieModel>> = repository.getMovies().cachedIn(viewModelScope)
-    val bookmarkFlow = repository.getSavedMovieIds()
+
+    val bookmarkFlow = repository.getSavedMovieIds().distinctUntilChanged()
+
     val movies: Flow<PagingData<MovieModelUi>> =
         moviesFlow.combine(bookmarkFlow) { movies, bookmarkIds ->
             movies.map { movie ->
@@ -33,7 +37,7 @@ class MovieViewModel(
                     isBookmark = bookmarkIds.contains(movie.id)
                 )
             }
-        }
+        }.cachedIn(viewModelScope)
 
     private val _effect = MutableSharedFlow<MovieSideEffect>()
     val effect = _effect.asSharedFlow()
@@ -42,17 +46,21 @@ class MovieViewModel(
         when (movieIntent) {
             MovieIntent.LogoutIntent -> {
                 preferenceManager.remove(Constants.PreferenceKeys.SHOW_ONBOARDING)
-                _effect.emit(MovieSideEffect.NavigateToOnboarding)
+                _effect.emit(NavigateToOnboarding)
             }
 
             is MovieIntent.OnMovieDetailsNavigateIntent -> {
-                _effect.emit(MovieSideEffect.NavigateToDetails(movieIntent.movieId))
+                _effect.emit(NavigateToDetails(movieIntent.movieId))
             }
             is MovieIntent.RemoveBookmarkIntent -> {
                 removeBookmark(movieIntent.movieId)
             }
             is MovieIntent.SaveBookmarkIntent -> {
                 saveBookmark(movieIntent.movie)
+            }
+
+            is MovieIntent.ShowErrorIntent -> {
+                _effect.emit(ShowError(movieIntent.message,movieIntent.actionLabel))
             }
         }
     }

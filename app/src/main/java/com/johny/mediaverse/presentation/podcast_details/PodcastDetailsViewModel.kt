@@ -13,7 +13,8 @@ import com.johny.mediaverse.core.presentation.utils.toString
 import com.johny.mediaverse.core.utils.serializableType
 import com.johny.mediaverse.domain.model.podcast.Podcast
 import com.johny.mediaverse.domain.repository.PodcastDetailRepository
-import com.johny.mediaverse.presentation.podcast_details.PodcastDetailsEffect.*
+import com.johny.mediaverse.presentation.podcast_details.PodcastDetailsEffect.NavigateToAudioPlayer
+import com.johny.mediaverse.presentation.podcast_details.PodcastDetailsEffect.OnBackPressed
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,14 +61,23 @@ class PodcastDetailsViewModel(
             }
     }
 
-    fun onIntent(intent: PodcastDetailsIntent)=viewModelScope.launch {
+    fun onIntent(intent: PodcastDetailsIntent) = viewModelScope.launch {
         when (intent) {
-            is PodcastDetailsIntent.OnAudioPlayIntent ->{
+            is PodcastDetailsIntent.OnAudioPlayIntent -> {
                 _effect.emit(NavigateToAudioPlayer(intent.episodeModel))
             }
 
             PodcastDetailsIntent.OnBackPressed -> {
                 _effect.emit(OnBackPressed)
+            }
+
+            is PodcastDetailsIntent.NavigateToWebviewIntent -> {
+                _effect.emit(
+                    PodcastDetailsEffect.NavigateToWebviewEffect(
+                        url = intent.url,
+                        title = intent.title
+                    )
+                )
             }
         }
     }

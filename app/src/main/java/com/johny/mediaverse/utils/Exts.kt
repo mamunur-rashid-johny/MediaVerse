@@ -1,5 +1,10 @@
 package com.johny.mediaverse.utils
 
+import android.graphics.Typeface
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import android.text.style.URLSpan
+import android.text.style.UnderlineSpan
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -12,6 +17,15 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.core.text.HtmlCompat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -35,13 +49,13 @@ fun Long.toDateString(): String? {
             .ofLocalizedDate(FormatStyle.LONG)
             .withLocale(Locale.getDefault())
         zonedDateTime.format(formatter)
-    }catch (ex: Exception){
+    } catch (ex: Exception) {
         ex.printStackTrace()
         null
     }
 }
 
-enum class DateFormat(val format: String){
+enum class DateFormat(val format: String) {
     YYYY("yyyy"),
     MMM_DD_YYYY_STRING_HH_MM_A("MMM dd, yyyy 'at' hh.mm a"),
     YYYY_MM_DD("yyyy-MM-dd")
@@ -59,18 +73,18 @@ enum class DateFormat(val format: String){
 // a     = AM/PM marker
 * @return format of time mils to May 12, 2018 at 11.00 AM
 * */
-fun Long.toDateFormatString(dateFormat: DateFormat): String{
+fun Long.toDateFormatString(dateFormat: DateFormat): String {
     return try {
         val instant = Instant.ofEpochMilli(this)
         val zoneDateTime = instant.atZone(ZoneId.systemDefault())
         val formatter = DateTimeFormatter.ofPattern(dateFormat.format, Locale.US)
         zoneDateTime.format(formatter)
-    }catch (_: Exception){
+    } catch (_: Exception) {
         ""
     }
 }
 
-fun String.toFormattedDate(dateFormat:DateFormat): String {
+fun String.toFormattedDate(dateFormat: DateFormat): String {
     return try {
         val parsedDate = LocalDate.parse(this)
         val formatter = DateTimeFormatter.ofPattern(dateFormat.format, Locale.getDefault())
@@ -83,7 +97,7 @@ fun String.toFormattedDate(dateFormat:DateFormat): String {
 
 fun Int.toSecondToMinute(): String {
     val minutes = this / 60
-    return String.format(Locale.getDefault(),"%02d", minutes)
+    return String.format(Locale.getDefault(), "%02d", minutes)
 }
 
 fun Modifier.shimmerEffect(): Modifier = composed {
@@ -124,5 +138,75 @@ fun Long.formatTime(): String {
     val totalSeconds = this / 1000
     val minutes = totalSeconds / 60
     val seconds = totalSeconds % 60
-    return String.format(Locale.getDefault(),"%02d:%02d", minutes, seconds)
+    return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+}
+
+fun String.parseHtml(
+    linkColor: Color = Color.Blue,
+    onLinkClick: ((String) -> Unit)? = null
+): AnnotatedString {
+    val spanned = HtmlCompat.fromHtml(this, HtmlCompat.FROM_HTML_MODE_COMPACT)
+    val text = spanned.toString()
+
+    return buildAnnotatedString {
+        append(text)
+
+        val spans = spanned.getSpans(0, spanned.length, Any::class.java)
+
+        spans.forEach { span ->
+            val start = spanned.getSpanStart(span)
+            val end = spanned.getSpanEnd(span)
+
+            when (span) {
+                is StyleSpan -> {
+                    when (span.style) {
+                        Typeface.BOLD -> addStyle(
+                            SpanStyle(fontWeight = FontWeight.Bold),
+                            start,
+                            end
+                        )
+
+                        Typeface.ITALIC -> addStyle(
+                            SpanStyle(fontStyle = FontStyle.Italic),
+                            start,
+                            end
+                        )
+
+                        Typeface.BOLD_ITALIC -> addStyle(
+                            SpanStyle(
+                                fontWeight = FontWeight.Bold,
+                                fontStyle = FontStyle.Italic
+                            ), start, end
+                        )
+                    }
+                }
+
+                is UnderlineSpan -> {
+                    addStyle(SpanStyle(textDecoration = TextDecoration.Underline), start, end)
+                }
+
+                is ForegroundColorSpan -> {
+                    addStyle(SpanStyle(color = Color(span.foregroundColor)), start, end)
+                }
+
+                is URLSpan -> {
+                    val link = LinkAnnotation.Url(
+                        url = span.url,
+                        styles = TextLinkStyles(
+                            style = SpanStyle(
+                                color = linkColor,
+                                textDecoration = TextDecoration.Underline
+                            )
+                        ),
+                        linkInteractionListener = { _ ->
+                            if (onLinkClick != null) {
+                                onLinkClick(span.url)
+                            }
+                        }
+                    )
+                    addLink(link, start, end)
+                }
+            }
+        }
+    }
 }

@@ -14,7 +14,9 @@ class MoviePagingSource(
     private val api: MovieDbApi,
     private val context: Context
 ) : PagingSource<Int, MovieModel>() {
+    private val seenIds = mutableSetOf<Int>()
     override fun getRefreshKey(state: PagingState<Int, MovieModel>): Int? {
+        seenIds.clear()
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
@@ -29,8 +31,11 @@ class MoviePagingSource(
             }
 
             is Result.Success -> {
+                val newUniqueItems = result.data.results.filter {
+                    seenIds.add(it.id)
+                }
                 LoadResult.Page(
-                    data = result.data.results.map { it.toMovieModel() },
+                    data = newUniqueItems.map { it.toMovieModel() },
                     prevKey = if (currentPage == STARTING_PAGE_INDEX) null else currentPage - 1,
                     nextKey = if (currentPage < result.data.total_pages) currentPage + 1 else null
                 )

@@ -1,10 +1,10 @@
 package com.johny.mediaverse.presentation.podcast_details.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -71,66 +72,80 @@ fun PodcastDetailsHeader(
         Text(
             text = headerData.title,
             style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 16.dp),
+            textAlign = TextAlign.Center
         )
 
 
         Text(
             text = headerData.publisher,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp)
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
+            textAlign = TextAlign.Center
         )
 
         HtmlText(
             html = headerData.description,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp)
+            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
+            onLinkClick = {
+
+            }
         )
 
         //play button and website link
-        ElevatedButton(
-            onClick = {
-                if (headerData.latestEpisode != null) onPlayLatestEpisode(headerData.latestEpisode) else onErrorMessage(
-                    "No latest audio available"
+        FlowRow(
+            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+            ElevatedButton(
+                onClick = {
+                    if (headerData.latestEpisode != null) onPlayLatestEpisode(headerData.latestEpisode) else onErrorMessage(
+                        "No latest audio available"
+                    )
+                },
+                elevation = ButtonDefaults.elevatedButtonElevation(
+                    defaultElevation = 10.dp
                 )
-            },
-            elevation = ButtonDefaults.elevatedButtonElevation(
-                defaultElevation = 10.dp
-            ),
-            modifier = Modifier.padding(8.dp)
-        ) {
+            ) {
 
-            Icon(
-                imageVector = Icons.Default.PlayArrow,
-                contentDescription = stringResource(R.string.play_latest_episode),
-                modifier = Modifier.padding(end = 4.dp)
-            )
-            Text(
-                text = stringResource(R.string.play_latest_episode),
-                style = MaterialTheme.typography.labelLarge
-            )
+                Icon(
+                    imageVector = Icons.Default.PlayArrow,
+                    contentDescription = stringResource(R.string.play_latest_episode),
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+                Text(
+                    text = stringResource(R.string.play_latest_episode),
+                    style = MaterialTheme.typography.labelLarge,
+                    maxLines = 1
+                )
+            }
+
+            ElevatedButton(
+                onClick = {
+                    if (headerData.website != null) onWebsiteLinkPress(headerData.website) else onErrorMessage(
+                        "No website available"
+                    )
+                },
+                elevation = ButtonDefaults.elevatedButtonElevation(
+                    defaultElevation = 10.dp
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Podcasts,
+                    contentDescription = stringResource(R.string.play_latest_episode),
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+                Text(
+                    text = stringResource(R.string.visit_website),
+                    style = MaterialTheme.typography.labelLarge,
+                    maxLines = 1
+                )
+            }
         }
 
-        ElevatedButton(
-            onClick = {
-                if (headerData.website != null) onWebsiteLinkPress(headerData.website) else onErrorMessage(
-                    "No website available"
-                )
-            },
-            elevation = ButtonDefaults.elevatedButtonElevation(
-                defaultElevation = 10.dp
-            ),
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Podcasts,
-                contentDescription = stringResource(R.string.play_latest_episode),
-                modifier = Modifier.padding(end = 4.dp)
-            )
-            Text(
-                text = stringResource(R.string.visit_website),
-                style = MaterialTheme.typography.labelLarge
-            )
-        }
 
         if (headerData.totalEpisodes > 0) {
             Row(

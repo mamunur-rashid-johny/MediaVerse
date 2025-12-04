@@ -11,7 +11,7 @@ data class EpisodeDto(
     val guid_from_rss: String,
     val id: String,
     val image: String,
-    val link: String,
+    val link: String?,
     val listennotes_edit_url: String,
     val listennotes_url: String,
     val maybe_audio_invalid: Boolean,
