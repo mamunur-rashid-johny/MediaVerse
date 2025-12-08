@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class WebViewViewModel(
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     val route = savedStateHandle.toRoute<Destination.WebViewRoute>()
@@ -38,12 +38,6 @@ class WebViewViewModel(
             is WebViewIntent.OnLoadingIntent -> {
                 state.update {
                     it.copy(isLoading = intent.isLoading)
-                }
-            }
-
-            is WebViewIntent.OnFirstPageLoadIntent -> {
-                state.update {
-                    it.copy(pageFirstLoaded = intent.value)
                 }
             }
         }

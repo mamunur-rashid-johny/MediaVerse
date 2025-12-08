@@ -10,6 +10,7 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+        maven(url = "https://jitpack.io")
     }
 }
 @Suppress("UnstableApiUsage")
@@ -18,6 +19,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven(url = "https://jitpack.io")
     }
 }
 

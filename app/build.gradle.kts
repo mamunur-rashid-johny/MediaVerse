@@ -68,6 +68,11 @@ android {
         buildConfig = true
         compose = true
     }
+    kotlin {
+        sourceSets.all {
+            languageSettings.enableLanguageFeature("ExplicitBackingFields")
+        }
+    }
 }
 
 dependencies {
@@ -128,4 +133,9 @@ dependencies {
     ksp(libs.room.db.compiler)
     //</editor-fold>
 
+    //<editor-fold desc = "Lottie">
+
+    //<editor-fold desc = "Lottie">
+    implementation(libs.bundles.lottie)
+    //</editor-fold>
 }

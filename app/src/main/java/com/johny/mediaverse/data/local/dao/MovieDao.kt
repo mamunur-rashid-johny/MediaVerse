@@ -20,6 +20,6 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveMovie(movieEntity: MovieEntity)
 
-    @Query("DELETE FROM podcast WHERE id = :movieId")
+    @Query("DELETE FROM movie WHERE id = :movieId")
     suspend fun removeMovie(movieId: Int)
 }

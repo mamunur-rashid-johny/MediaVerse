@@ -1,9 +1,7 @@
 package com.johny.mediaverse.presentation.web_view
 
-import android.graphics.Bitmap
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,20 +39,8 @@ fun WebViewScreen(
         }
     }
 
-    BackHandler(enabled = webview.canGoBack()) {
-        webview.goBack()
-    }
-
     LaunchedEffect(Unit) {
         webview.webViewClient = object : WebViewClient() {
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                if (!state.pageFirstLoaded){
-                    onIntent(WebViewIntent.OnLoadingIntent(true))
-                    onIntent(WebViewIntent.OnFirstPageLoadIntent(true))
-                }
-
-            }
-
             override fun onPageFinished(view: WebView?, url: String?) {
                 onIntent(WebViewIntent.OnLoadingIntent(false))
             }
@@ -69,50 +55,47 @@ fun WebViewScreen(
     }
 
 
-    if (state.isLoading) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            WebViewShimmer()
-        }
-    } else {
-
-
-        Column(
-            modifier = modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                IconButton(
-                    onClick = {
-                        if (webview.canGoBack()) {
-                            webview.goBack()
-                        } else {
-                            onIntent(WebViewIntent.OnBackPressedIntent)
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "navigate back"
-                    )
+            IconButton(
+                onClick = {
+                    onIntent(WebViewIntent.OnBackPressedIntent)
                 }
-
-                Text(
-                    text = state.title ?: "Loading...",
-                    style = MaterialTheme.typography.titleLarge,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "navigate back"
                 )
             }
+
+            Text(
+                text = state.title ?: "",
+                style = MaterialTheme.typography.titleLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+
+        Box(modifier = Modifier.weight(1f)){
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
-                factory = { webview }
+                factory = { webview },
+                update = { webView ->
+                    if (webView.url != state.url) {
+                        webView.loadUrl(state.url!!)
+                    }
+                }
             )
+            if (state.isLoading) WebViewShimmer()
         }
     }
 }

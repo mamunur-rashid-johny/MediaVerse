@@ -22,7 +22,8 @@ landscapist-coil = "2.6.1"
 exo-player = "1.8.0"
 ksp = "2.1.0-1.0.29"
 room_database = "2.8.4"
-window-size ="1.4.0"
+window-size = "1.4.0"
+lottie = "6.6.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,7 +52,7 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "compose-material-icons-extended" }
-compose-window-size = {group="androidx.compose.material3",name="material3-window-size-class",version.ref="window-size"}
+compose-window-size = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "window-size" }
 
 #material3 expressive
 material3-expressive = { module = "androidx.compose.material3:material3-android", version.ref = "material3-expressive" }
@@ -79,10 +80,13 @@ exo-player-common = { group = "androidx.media3", name = "media3-common", version
 media-session = { group = "androidx.media3", name = "media3-session", version.ref = "exo-player" }
 
 #room database
-room-db = {group="androidx.room",name="room-runtime",version.ref="room_database"}
-room-db-compiler = {group="androidx.room",name="room-compiler",version.ref="room_database"}
-room-db-ext = {group="androidx.room",name="room-ktx",version.ref="room_database"}
-room-db-paging = {group="androidx.room",name="room-paging",version.ref="room_database"}
+room-db = { group = "androidx.room", name = "room-runtime", version.ref = "room_database" }
+room-db-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room_database" }
+room-db-ext = { group = "androidx.room", name = "room-ktx", version.ref = "room_database" }
+room-db-paging = { group = "androidx.room", name = "room-paging", version.ref = "room_database" }
+
+#lottie animation
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 
 
 [plugins]
@@ -138,6 +142,10 @@ room-db = [
     "room-db",
     "room-db-ext",
     "room-db-paging"
+]
+
+lottie = [
+    "lottie-compose",
 ]
 
 

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,12 +16,12 @@ import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.BookmarkRemove
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,19 +41,17 @@ fun PodcastItem(
     onAddBookmark: (Podcast) -> Unit,
     onRemoveBookmark: (String) -> Unit
 ) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onItemClick(podcastUi.podcast) }
-            .padding(vertical = 12.dp, horizontal = 8.dp),
+            .padding(vertical = 12.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
-    )
-    {
+    ) {
         CoilImage(
             modifier = Modifier
                 .size(60.dp)
-                .clip(RoundedCornerShape(30.dp)),
+                .clip(RoundedCornerShape(12.dp)),
             imageModel = { podcastUi.podcast.thumbnail },
             imageOptions = ImageOptions(
                 contentScale = ContentScale.Crop,
@@ -72,6 +71,7 @@ fun PodcastItem(
                 maxLines = 1,
                 modifier = Modifier.basicMarquee()
             )
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = podcastUi.podcast.publisher,
                 style = AppTypography.titleSmall,
@@ -81,22 +81,20 @@ fun PodcastItem(
         }
 
         IconButton(onClick = {
-            if (podcastUi.isBookmark){
+            if (podcastUi.isBookmark) {
                 onRemoveBookmark(podcastUi.podcast.id)
-            }else{
+            } else {
                 onAddBookmark(podcastUi.podcast)
             }
         }) {
             Icon(
-                imageVector = if (podcastUi.isBookmark) Icons.Default.BookmarkRemove  else Icons.Default.BookmarkBorder ,
-                contentDescription = "Bookmark",
-                modifier = Modifier.size(24.dp),
-                tint = if (podcastUi.isBookmark) Color.Red else Color.Green
+                imageVector = if (podcastUi.isBookmark) Icons.Default.BookmarkRemove else Icons.Default.BookmarkBorder,
+                contentDescription = if (podcastUi.isBookmark) "Remove Bookmark" else "Add Bookmark",
+                modifier = Modifier.size(26.dp),
+                tint = if (podcastUi.isBookmark) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-
     }
-
 }
 
 
@@ -119,7 +117,7 @@ private fun PodcastItemPreview() {
                     "episodic",
                     120
                 ),
-                isBookmark = true
+                isBookmark = false
             ),
             onItemClick = {},
             onAddBookmark = {},

@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LoadingIndicator
@@ -88,7 +88,7 @@ fun PodcastItemShimmer(modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .size(60.dp)
-                .clip(CircleShape)
+                .clip(RoundedCornerShape(12.dp))
                 .shimmerEffect()
         )
         Spacer(Modifier.width(16.dp))

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -38,7 +37,6 @@ fun MovieScreen(
         if (movies.loadState.refresh is LoadState.Loading) {
             items(10) {
                 MovieGridItemShimmer()
-                HorizontalDivider()
             }
         } else {
             items(
@@ -53,7 +51,6 @@ fun MovieScreen(
                         onAddBookmark = {p -> onIntent(MovieIntent.SaveBookmarkIntent(p)) },
                         onRemoveBookmark = {id -> onIntent(MovieIntent.RemoveBookmarkIntent(id))  }
                     )
-                    HorizontalDivider()
                 }
             }
         }
@@ -70,12 +67,13 @@ fun MovieScreen(
                     onIntent(MovieIntent.ShowErrorIntent(error.error.message?:"Unknown Error","Retry"))
                 }
                 loadState.append is LoadState.Error -> {
-                    val error = loadState.refresh as LoadState.Error
+                    val error = loadState.append as LoadState.Error
                     item(
                         span = { GridItemSpan(maxLineSpan) }
                     ) { ErrorRow(
                         message = error.error.message,
-                        onClickRetry = { retry() }) }
+                        onClickRetry = { retry() })
+                    }
                 }
             }
         }

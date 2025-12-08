@@ -1,4 +1,4 @@
-package com.johny.mediaverse.domain.model.movie.config
+package com.johny.mediaverse.domain.config
 
 enum class BackdropSize(val value: String) {
     W300("w300"),

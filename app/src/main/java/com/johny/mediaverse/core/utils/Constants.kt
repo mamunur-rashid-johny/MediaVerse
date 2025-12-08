@@ -21,6 +21,21 @@ object Constants {
     object MovieDbUrl{
         const val MOVIE_DB_BASE_URL = "https://api.themoviedb.org/3/"
         const val DISCOVER_MOVIE = "discover/movie"
+        const val DISCOVER_TV_SHOW = "discover/tv"
         const val IMAGE_ROOT_PATH ="https://image.tmdb.org/t/p/"
+    }
+
+    object ApiQueryParam{
+        const val INCLUDE_ADULT = "include_adult"
+        const val INCLUDE_ADULT_VALUE = true
+        const val INCLUDE_VIDEO = "include_video"
+        const val INCLUDE_VIDEO_VALUE = false
+        const val LANGUAGE = "language"
+        const val LANGUAGE_VALUE = "en-US"
+        const val SORT_BY = "sort_by"
+        const val SORT_BY_VALUE = "popularity.desc"
+        const val INCLUDE_NULL_FIRST_AIR_DATES = "include_null_first_air_dates"
+        const val INCLUDE_NULL_FIRST_AIR_DATES_VALUES = false
+        const val PAGE = "page"
     }
 }

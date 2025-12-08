@@ -1,17 +1,15 @@
 package com.johny.mediaverse.presentation.web_view.componets
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,31 +23,11 @@ fun WebViewShimmer() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(24.dp)
-                    .clip(CircleShape)
-                    .shimmerEffect()
-            )
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .height(24.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .shimmerEffect()
-            )
-        }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -62,7 +40,6 @@ fun WebViewShimmer() {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-
 
         repeat(10) {
             Box(

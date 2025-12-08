@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,8 +22,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.johny.mediaverse.presentation.ui.theme.AppTypography
+import com.johny.mediaverse.presentation.ui.theme.MediaVerseTheme
 import com.johny.mediaverse.utils.shimmerEffect
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -33,30 +33,12 @@ fun LoadingRow() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(4.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         LoadingIndicator(
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier.size(32.dp)
         )
-    }
-}
-
-@Composable
-fun FullScreenError(
-    message: String?,
-    onClickRetry: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(message?:"Failed to load data.", style = AppTypography.bodyLarge)
-        Spacer(Modifier.height(8.dp))
-        Button(onClick = onClickRetry) { Text("Retry") }
     }
 }
 
@@ -66,20 +48,31 @@ fun ErrorRow(
     onClickRetry: () -> Unit
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
+        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceVariant).padding(8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            message?:"Failed to load more.",
+            text = message?:"Failed to load more.",
             color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f)
         )
         Button(onClick = onClickRetry) {
-            Text(text = "Retry", style = MaterialTheme.typography.labelLarge)
+            Text(
+                text = "Retry",
+                style = MaterialTheme.typography.labelLarge,
+                maxLines = 1
+            )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun ErrorPreview() {
+    MediaVerseTheme {
+        ErrorRow(message = "Failed to load more.") { }
     }
 }
 
@@ -109,7 +102,9 @@ fun MovieGridItemShimmer(
                     .shimmerEffect()
             ) {
                 Box(
-                    modifier = Modifier.size(18.dp).shimmerEffect(),
+                    modifier = Modifier
+                        .size(18.dp)
+                        .shimmerEffect(),
                 )
             }
         }
@@ -119,13 +114,17 @@ fun MovieGridItemShimmer(
             modifier = Modifier.padding(12.dp)
         ) {
             Box(
-                modifier = Modifier.size(width = 50.dp, height = 20.dp).shimmerEffect()
+                modifier = Modifier
+                    .size(width = 50.dp, height = 20.dp)
+                    .shimmerEffect()
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
             Box(
-                modifier = Modifier.size(width = 50.dp, height = 20.dp).shimmerEffect()
+                modifier = Modifier
+                    .size(width = 50.dp, height = 20.dp)
+                    .shimmerEffect()
             )
         }
     }

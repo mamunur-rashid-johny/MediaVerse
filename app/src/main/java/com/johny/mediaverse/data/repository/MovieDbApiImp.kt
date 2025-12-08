@@ -5,6 +5,15 @@ import com.johny.mediaverse.core.data.networking.safeCall
 import com.johny.mediaverse.core.domain.utils.NetworkError
 import com.johny.mediaverse.core.domain.utils.Result
 import com.johny.mediaverse.core.utils.Constants
+import com.johny.mediaverse.core.utils.Constants.ApiQueryParam.INCLUDE_ADULT
+import com.johny.mediaverse.core.utils.Constants.ApiQueryParam.INCLUDE_ADULT_VALUE
+import com.johny.mediaverse.core.utils.Constants.ApiQueryParam.INCLUDE_VIDEO
+import com.johny.mediaverse.core.utils.Constants.ApiQueryParam.INCLUDE_VIDEO_VALUE
+import com.johny.mediaverse.core.utils.Constants.ApiQueryParam.LANGUAGE
+import com.johny.mediaverse.core.utils.Constants.ApiQueryParam.LANGUAGE_VALUE
+import com.johny.mediaverse.core.utils.Constants.ApiQueryParam.PAGE
+import com.johny.mediaverse.core.utils.Constants.ApiQueryParam.SORT_BY
+import com.johny.mediaverse.core.utils.Constants.ApiQueryParam.SORT_BY_VALUE
 import com.johny.mediaverse.data.model.movie.MovieResponseDto
 import com.johny.mediaverse.domain.repository.MovieDbApi
 import io.ktor.client.HttpClient
@@ -22,23 +31,12 @@ class MovieDbApiImp(
             ){
                 headers.append(HttpHeaders.Authorization,"Bearer ${BuildConfig.MOVIE_DB_ACCESS_TOKEN}")
                 headers.append(HttpHeaders.Accept, "application/json")
-
-                //parameter
                 parameter(INCLUDE_ADULT,"$INCLUDE_ADULT_VALUE")
                 parameter(INCLUDE_VIDEO,"$INCLUDE_VIDEO_VALUE")
                 parameter(LANGUAGE, LANGUAGE_VALUE)
-                parameter("page","$page")
+                parameter(PAGE,"$page")
                 parameter(SORT_BY, SORT_BY_VALUE)
             }
         }
     }
 }
-
-const val INCLUDE_ADULT = "include_adult"
-const val INCLUDE_ADULT_VALUE = false
-const val INCLUDE_VIDEO = "include_video"
-const val INCLUDE_VIDEO_VALUE = false
-const val LANGUAGE = "language"
-const val LANGUAGE_VALUE = "en-US"
-const val SORT_BY = "sort_by"
-const val SORT_BY_VALUE = "popularity.desc"
