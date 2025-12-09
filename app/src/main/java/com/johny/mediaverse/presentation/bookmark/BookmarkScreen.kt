@@ -12,28 +12,23 @@ import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.johny.mediaverse.presentation.bookmark.movie_bookmark.MovieBookmarkRoute
 import com.johny.mediaverse.presentation.bookmark.podcast_bookmark.PodcastBookmarkRoute
 import com.johny.mediaverse.presentation.bookmark.tv_show_bookmark.TvShowBookmarkRoute
-import com.johny.mediaverse.presentation.ui.theme.MediaVerseTheme
 
 @Composable
 fun BookmarkScreen(
     modifier: Modifier = Modifier,
+    state: BookmarkState,
     onIntent: (BookmarkIntent) -> Unit
 ) {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
     val tabs = listOf("Movie", "Tv Show", "Podcast")
     val colors = listOf(Color(0xFFE53E3E), Color(0xFF3182CE), Color(0xFF38A169))
     Column {
@@ -41,7 +36,7 @@ fun BookmarkScreen(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            selectedTabIndex = selectedTabIndex,
+            selectedTabIndex = state.selectedTabIndex,
             containerColor = Color.Transparent,
             contentColor = Color(0xFF2D3748),
             indicator = {},
@@ -55,13 +50,13 @@ fun BookmarkScreen(
         ) {
             tabs.forEachIndexed { index, title ->
                 Tab(
-                    selected = selectedTabIndex == index,
-                    onClick = { selectedTabIndex = index },
+                    selected = state.selectedTabIndex == index,
+                    onClick = { onIntent(BookmarkIntent.OnUpdateTabIndex(index)) },
                     modifier = Modifier
                         .padding(vertical = 8.dp)
                         .clip(RoundedCornerShape(20.dp))
                         .background(
-                            if (selectedTabIndex == index)
+                            if (state.selectedTabIndex == index)
                                 colors[index].copy(alpha = 0.1f)
                             else Color.Transparent
                         ),
@@ -70,7 +65,7 @@ fun BookmarkScreen(
                         Text(
                             text = title,
                             style = MaterialTheme.typography.labelLarge,
-                            fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Medium,
+                            fontWeight = if (state.selectedTabIndex == index) FontWeight.Bold else FontWeight.Medium,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -83,7 +78,7 @@ fun BookmarkScreen(
             }
         }
 
-        when (selectedTabIndex) {
+        when (state.selectedTabIndex) {
             0 -> MovieBookmarkRoute(
                 modifier = modifier.weight(1f),
                 onItemClick = {
@@ -105,13 +100,5 @@ fun BookmarkScreen(
                 }
             )
         }
-    }
-}
-
-@Preview
-@Composable
-private fun BookmarkScreenPreview() {
-    MediaVerseTheme {
-        BookmarkScreen {}
     }
 }

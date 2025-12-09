@@ -10,14 +10,17 @@ import androidx.compose.ui.Modifier
 import com.johny.mediaverse.presentation.ui.theme.AppTypography
 
 @Composable
-fun TvDetailsScreen(modifier: Modifier = Modifier) {
+fun TvDetailsScreen(
+    modifier: Modifier = Modifier,
+    tvShowId: Int
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = "Tv Show Details Screen",
+            text = "Tv Show Details Screen \n $tvShowId",
             style = AppTypography.bodyLarge
         )
     }
