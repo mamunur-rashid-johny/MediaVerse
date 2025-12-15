@@ -1,6 +1,8 @@
 package com.johny.mediaverse.presentation.movie.components
 
+import android.R
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,9 +24,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.johny.mediaverse.core.presentation.components.Perspective
+import com.johny.mediaverse.core.presentation.components.ThreeDimensionalLayout
 import com.johny.mediaverse.presentation.ui.theme.MediaVerseTheme
+import com.johny.mediaverse.presentation.ui.theme.addToBookmarkButtonBg
+import com.johny.mediaverse.presentation.ui.theme.elevatedButtonBg
+import com.johny.mediaverse.presentation.ui.theme.noDataFoundBackground
 import com.johny.mediaverse.utils.shimmerEffect
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -48,22 +60,49 @@ fun ErrorRow(
     onClickRetry: () -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceVariant).padding(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(2.dp, noDataFoundBackground)
+            .background(addToBookmarkButtonBg)
+            .padding(8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = message?:"Failed to load more.",
-            color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                color = Color.Black
+            ),
             modifier = Modifier.weight(1f)
         )
-        Button(onClick = onClickRetry) {
-            Text(
-                text = "Retry",
-                style = MaterialTheme.typography.labelLarge,
-                maxLines = 1
-            )
+        ThreeDimensionalLayout(
+            perspective = Perspective.Left(
+                bottomEdgeColor = Color.Black,
+                rightEdgeColor = Color.Black
+            ),
+            edgeOffset = 6.dp,
+            onClick = onClickRetry
+        ) {
+
+            Box(
+                modifier = Modifier
+                    .border(2.dp, Color.Black)
+                    .background(elevatedButtonBg)
+                    .padding(horizontal = 24.dp, vertical = 12.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Retry",
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Color.Black
+                    ),
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 }

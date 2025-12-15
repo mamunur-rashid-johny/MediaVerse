@@ -6,13 +6,14 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
+    alias (libs.plugins.google.play.service)
 }
 
 
 //for extracting local properties variables
 val properties = Properties()
 val propertiesLocalFile = rootProject.file("local.properties")
-if (propertiesLocalFile.exists()){
+if (propertiesLocalFile.exists()) {
     properties.load(propertiesLocalFile.inputStream())
 }
 
@@ -39,8 +40,8 @@ android {
 
         //Code to Fetch Keys or Other Credentials
         val movieDbApiKey = properties.getProperty("MOVIE_DB_API_KEY", "")
-        val movieDbAccessToken = properties.getProperty("MOVIE_DB_ACCESS_TOKEN","")
-        val listenNoteApiKey = properties.getProperty("LISTEN_NOTE_API_KEY","")
+        val movieDbAccessToken = properties.getProperty("MOVIE_DB_ACCESS_TOKEN", "")
+        val listenNoteApiKey = properties.getProperty("LISTEN_NOTE_API_KEY", "")
         buildConfigField("String", "MOVIE_DB_API_KEY", "\"$movieDbApiKey\"")
         buildConfigField("String", "MOVIE_DB_ACCESS_TOKEN", "\"$movieDbAccessToken\"")
         buildConfigField("String", "LISTEN_NOTE_API_KEY", "\"$listenNoteApiKey\"")
@@ -134,8 +135,16 @@ dependencies {
     //</editor-fold>
 
     //<editor-fold desc = "Lottie">
-
-    //<editor-fold desc = "Lottie">
     implementation(libs.bundles.lottie)
+    //</editor-fold>
+
+    //<editor-fold desc = "Firebase">
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.remote.config)
+    implementation(libs.firebase.analytics)
+    //</editor-fold>
+
+    //<editor-fold desc = "App Start up">
+    implementation(libs.androidx.app.startup)
     //</editor-fold>
 }

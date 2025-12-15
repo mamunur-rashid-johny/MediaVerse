@@ -1,4 +1,4 @@
-package com.johny.mediaverse.presentation.bookmark.components
+package com.johny.mediaverse.core.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,15 +23,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.johny.mediaverse.core.presentation.components.Perspective
-import com.johny.mediaverse.core.presentation.components.ThreeDimensionalLayout
 import com.johny.mediaverse.presentation.ui.theme.MediaVerseTheme
 import com.johny.mediaverse.presentation.ui.theme.addToBookmarkButtonBg
+import com.johny.mediaverse.presentation.ui.theme.elevatedButtonBg
 import com.johny.mediaverse.presentation.ui.theme.noDataFoundBackground
 
 
 @Composable
-fun BookmarkEmptyScreen(
+fun EmptyScreen(
     modifier: Modifier = Modifier,
     title: String,
     info: String,
@@ -91,7 +90,7 @@ fun BookmarkEmptyScreen(
                     Box(
                         modifier = Modifier
                             .border(2.dp, Color.Black)
-                            .background(Color(0xFF00E676))
+                            .background(elevatedButtonBg)
                             .padding(horizontal = 24.dp, vertical = 12.dp),
                         contentAlignment = Alignment.Center
                     ) {
@@ -115,7 +114,7 @@ fun BookmarkEmptyScreen(
 @Composable
 private fun EmptyScreenPreviewTest() {
     MediaVerseTheme {
-        BookmarkEmptyScreen(
+        EmptyScreen(
             title = "No Data Found",
             info = "You haven’t bookmarked any movies yet. Start exploring and save your favorites to see them",
             label = "Add Movie to Bookmark",

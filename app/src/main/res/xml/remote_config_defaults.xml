@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaults>
+    <entry>
+        <key>show_search_icon</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>show_info_floating_button</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>is_android_app_inactive</key>
+        <value>false</value>
+    </entry>
+</defaults>

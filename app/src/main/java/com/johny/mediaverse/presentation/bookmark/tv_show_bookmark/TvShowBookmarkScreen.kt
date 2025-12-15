@@ -15,7 +15,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.johny.mediaverse.data.local.model.tv_show.TvShowEntity
 import com.johny.mediaverse.data.mapper.toTvShowUIModel
-import com.johny.mediaverse.presentation.bookmark.components.BookmarkEmptyScreen
+import com.johny.mediaverse.core.presentation.components.EmptyScreen
 import com.johny.mediaverse.presentation.movie.components.MovieGridItemShimmer
 import com.johny.mediaverse.presentation.podcast.components.FullScreenError
 import com.johny.mediaverse.presentation.tv_show.components.TvShowErrorRow
@@ -33,7 +33,7 @@ fun TvShowBookmarkScreen(
     val isListEmpty = tvShows.loadState.refresh is LoadState.NotLoading && tvShows.itemCount == 0
 
     if (isListEmpty) {
-        BookmarkEmptyScreen(
+        EmptyScreen(
             title = "No Data Found",
             info = "No TV shows bookmarked yet. Browse shows and add them to your bookmarks for quick access.",
             label = "Add Tv Show to Bookmark",

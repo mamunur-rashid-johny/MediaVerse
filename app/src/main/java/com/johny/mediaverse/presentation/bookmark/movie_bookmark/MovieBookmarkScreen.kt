@@ -16,7 +16,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.johny.mediaverse.data.local.model.movie.MovieEntity
 import com.johny.mediaverse.data.mapper.toMovieUIModel
-import com.johny.mediaverse.presentation.bookmark.components.BookmarkEmptyScreen
+import com.johny.mediaverse.core.presentation.components.EmptyScreen
 import com.johny.mediaverse.presentation.movie.components.ErrorRow
 import com.johny.mediaverse.presentation.movie.components.LoadingRow
 import com.johny.mediaverse.presentation.movie.components.MovieGridItem
@@ -35,7 +35,7 @@ fun MovieBookmarkScreen(
     val isListEmpty = movies.loadState.refresh is LoadState.NotLoading && movies.itemCount == 0
 
     if (isListEmpty) {
-        BookmarkEmptyScreen(
+        EmptyScreen(
             title = "No Data Found",
             info = "You haven’t bookmarked any movies yet. Start exploring and save your favorites to see them",
             label = "Add Movie to Bookmark",

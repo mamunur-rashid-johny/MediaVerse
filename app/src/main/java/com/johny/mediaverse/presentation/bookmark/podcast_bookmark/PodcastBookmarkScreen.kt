@@ -13,7 +13,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.johny.mediaverse.data.local.model.podcast.PodcastEntity
 import com.johny.mediaverse.data.mapper.toPodcastUiModel
-import com.johny.mediaverse.presentation.bookmark.components.BookmarkEmptyScreen
+import com.johny.mediaverse.core.presentation.components.EmptyScreen
 import com.johny.mediaverse.presentation.podcast.components.ErrorRow
 import com.johny.mediaverse.presentation.podcast.components.FullScreenError
 import com.johny.mediaverse.presentation.podcast.components.LoadingRow
@@ -32,7 +32,7 @@ fun PodcastBookmarkScreen(
         podcastEntity.loadState.refresh is LoadState.NotLoading && podcastEntity.itemCount == 0
 
     if (isListEmpty) {
-        BookmarkEmptyScreen(
+        EmptyScreen(
             title = "No Data Found",
             info = "You haven’t bookmarked any movies yet. Start exploring and save your favorites to see them",
             label = "Add Podcast to Bookmark",

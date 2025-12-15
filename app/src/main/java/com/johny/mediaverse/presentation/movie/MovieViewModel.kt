@@ -6,11 +6,14 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.johny.mediaverse.core.data.pref.PreferenceManager
+import com.johny.mediaverse.core.startup.RemoteConfigDataSource
 import com.johny.mediaverse.core.utils.Constants
 import com.johny.mediaverse.data.mapper.toMovieEntity
 import com.johny.mediaverse.domain.model.movie.MovieModel
 import com.johny.mediaverse.domain.repository.MovieRepository
-import com.johny.mediaverse.presentation.movie.MovieSideEffect.*
+import com.johny.mediaverse.presentation.movie.MovieSideEffect.NavigateToDetails
+import com.johny.mediaverse.presentation.movie.MovieSideEffect.NavigateToOnboarding
+import com.johny.mediaverse.presentation.movie.MovieSideEffect.ShowError
 import com.johny.mediaverse.presentation.movie.model.MovieModelUi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +25,8 @@ import kotlinx.coroutines.launch
 
 class MovieViewModel(
     private val preferenceManager: PreferenceManager,
-    private val repository: MovieRepository
+    private val repository: MovieRepository,
+    private val remoteConfigDataSource: RemoteConfigDataSource
 ) : ViewModel() {
 
     val moviesFlow: Flow<PagingData<MovieModel>> = repository.getMovies().cachedIn(viewModelScope)
