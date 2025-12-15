@@ -7,14 +7,22 @@ import com.johny.mediaverse.core.presentation.utils.ObserveAsEvent
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun TvShowBookmarkRoute(modifier: Modifier = Modifier,onItemClick:(Int)->Unit) {
+fun TvShowBookmarkRoute(
+    modifier: Modifier = Modifier,
+    onItemClick: (Int) -> Unit,
+    onNavigateToTvShow: () -> Unit
+) {
     val viewModel: TvShowBookmarkViewModel = koinViewModel()
     val tvShowPager = viewModel.savedTvShow.collectAsLazyPagingItems()
 
-    ObserveAsEvent(events = viewModel.effect){ effect ->
-        when(effect){
+    ObserveAsEvent(events = viewModel.effect) { effect ->
+        when (effect) {
             is TvShowBookmarkEffect.OnNavigateToTvShowDetailEffect -> {
                 onItemClick(effect.tvShowId)
+            }
+
+            TvShowBookmarkEffect.TvShowScreenNavigationEffect -> {
+                onNavigateToTvShow()
             }
         }
     }

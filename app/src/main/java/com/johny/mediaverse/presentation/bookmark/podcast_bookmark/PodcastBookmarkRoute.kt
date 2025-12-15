@@ -8,7 +8,11 @@ import com.johny.mediaverse.domain.model.podcast.Podcast
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun PodcastBookmarkRoute(modifier: Modifier = Modifier,onItemClick:(Podcast)->Unit) {
+fun PodcastBookmarkRoute(
+    modifier: Modifier = Modifier,
+    onItemClick:(Podcast)->Unit,
+    onNavigateToPodcast:()-> Unit
+) {
     val viewModel: PodcastBookmarkViewModel = koinViewModel()
     val savedPodcast = viewModel.savedPodcast.collectAsLazyPagingItems()
 
@@ -18,6 +22,10 @@ fun PodcastBookmarkRoute(modifier: Modifier = Modifier,onItemClick:(Podcast)->Un
         when(it){
             is PodcastBookmarkEffect.OnNavigateToPodcastDetailEffect -> {
                 onItemClick(it.podcast)
+            }
+
+            PodcastBookmarkEffect.PodcastScreenNavigationEffect -> {
+                onNavigateToPodcast()
             }
         }
     }

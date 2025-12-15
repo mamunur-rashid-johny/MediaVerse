@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
-import com.johny.mediaverse.R
 import com.johny.mediaverse.data.local.model.tv_show.TvShowEntity
 import com.johny.mediaverse.data.mapper.toTvShowUIModel
 import com.johny.mediaverse.presentation.bookmark.components.BookmarkEmptyScreen
@@ -33,71 +32,88 @@ fun TvShowBookmarkScreen(
     val isInitialLoading = tvShows.loadState.refresh is LoadState.Loading && tvShows.itemCount == 0
     val isListEmpty = tvShows.loadState.refresh is LoadState.NotLoading && tvShows.itemCount == 0
 
+    if (isListEmpty) {
+        BookmarkEmptyScreen(
+            title = "No Data Found",
+            info = "No TV shows bookmarked yet. Browse shows and add them to your bookmarks for quick access.",
+            label = "Add Tv Show to Bookmark",
+            action = {
+                onIntent(TvShowBookmarkIntent.OnNavigateToTvShow)
+            }
+        )
+    } else {
 
-    LazyVerticalGrid(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(PaddingValues(12.dp)),
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        columns = GridCells.Fixed(2)
-    ) {
-        when{
-            isInitialLoading ->{
-                items(10) {
-                    MovieGridItemShimmer()
-                }
-            }
-            isListEmpty -> {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    BookmarkEmptyScreen(
-                        modifier = Modifier.fillMaxSize(),
-                        message = "No Tv Shows Bookmarked Yet!",
-                        animation = R.raw.tv_show
-                    )
-                }
-            }
-            else ->{
-                items(
-                    count = tvShows.itemCount,
-                    key = tvShows.itemKey { it.toTvShowUIModel().tvShow.id }
-                ) { index ->
-                    val tvShow = tvShows[index]
-                    tvShow?.let {
-                        TvShowItem(
-                            tvShowUi = it.toTvShowUIModel(),
-                            onItemClick = { p -> onIntent(TvShowBookmarkIntent.OnTvShowBookmarkClickIntent(p.id))  },
-                            onAddBookmark = {   },
-                            onRemoveBookmark = { id -> onIntent(TvShowBookmarkIntent.OnTvShowBookRemoveIntent(id)) }
-                        )
+        LazyVerticalGrid(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(PaddingValues(12.dp)),
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            columns = GridCells.Fixed(2)
+        ) {
+            when {
+                isInitialLoading -> {
+                    items(10) {
+                        MovieGridItemShimmer()
                     }
                 }
-            }
-        }
 
-        tvShows.apply {
-            when {
-                loadState.append is LoadState.Loading -> {
-                    item(
-                        span = { GridItemSpan(maxLineSpan) }
-                    ) { TvShowLoadingRow() }
-                }
-
-                loadState.refresh is LoadState.Error -> {
-                    if (tvShows.itemCount == 0){
-                        item(span = { GridItemSpan(maxLineSpan) }) {
-                            FullScreenError(onClickRetry = { retry() })
+                else -> {
+                    items(
+                        count = tvShows.itemCount,
+                        key = tvShows.itemKey { it.toTvShowUIModel().tvShow.id }
+                    ) { index ->
+                        val tvShow = tvShows[index]
+                        tvShow?.let {
+                            TvShowItem(
+                                tvShowUi = it.toTvShowUIModel(),
+                                onItemClick = { p ->
+                                    onIntent(
+                                        TvShowBookmarkIntent.OnTvShowBookmarkClickIntent(
+                                            p.id
+                                        )
+                                    )
+                                },
+                                onAddBookmark = { },
+                                onRemoveBookmark = { id ->
+                                    onIntent(
+                                        TvShowBookmarkIntent.OnTvShowBookRemoveIntent(
+                                            id
+                                        )
+                                    )
+                                }
+                            )
                         }
                     }
                 }
+            }
 
-                loadState.append is LoadState.Error -> {
-                    val error = loadState.append as LoadState.Error
-                    item(
-                        span = { GridItemSpan(maxLineSpan) }
-                    ) {
-                        TvShowErrorRow(message = error.error.message, onClickRetry = { retry() })
+            tvShows.apply {
+                when {
+                    loadState.append is LoadState.Loading -> {
+                        item(
+                            span = { GridItemSpan(maxLineSpan) }
+                        ) { TvShowLoadingRow() }
+                    }
+
+                    loadState.refresh is LoadState.Error -> {
+                        if (tvShows.itemCount == 0) {
+                            item(span = { GridItemSpan(maxLineSpan) }) {
+                                FullScreenError(onClickRetry = { retry() })
+                            }
+                        }
+                    }
+
+                    loadState.append is LoadState.Error -> {
+                        val error = loadState.append as LoadState.Error
+                        item(
+                            span = { GridItemSpan(maxLineSpan) }
+                        ) {
+                            TvShowErrorRow(
+                                message = error.error.message,
+                                onClickRetry = { retry() })
+                        }
                     }
                 }
             }

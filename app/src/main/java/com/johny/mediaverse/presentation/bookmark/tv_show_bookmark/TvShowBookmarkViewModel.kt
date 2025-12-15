@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.johny.mediaverse.domain.repository.BookmarkRepository
+import com.johny.mediaverse.presentation.bookmark.tv_show_bookmark.TvShowBookmarkEffect.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -19,17 +20,22 @@ class TvShowBookmarkViewModel(
         field = MutableSharedFlow<TvShowBookmarkEffect>()
 
     fun onIntent(intent: TvShowBookmarkIntent) = viewModelScope.launch {
-        when(intent){
+        when (intent) {
             is TvShowBookmarkIntent.OnTvShowBookRemoveIntent -> {
                 removeTvShowBookmark(intent.tvShowId)
             }
+
             is TvShowBookmarkIntent.OnTvShowBookmarkClickIntent -> {
-                effect.emit(TvShowBookmarkEffect.OnNavigateToTvShowDetailEffect(intent.tvShowId))
+                effect.emit(OnNavigateToTvShowDetailEffect(intent.tvShowId))
+            }
+
+            TvShowBookmarkIntent.OnNavigateToTvShow -> {
+                effect.emit(TvShowScreenNavigationEffect)
             }
         }
     }
 
-    private fun removeTvShowBookmark(tvShowId: Int) = viewModelScope.launch(Dispatchers.IO){
+    private fun removeTvShowBookmark(tvShowId: Int) = viewModelScope.launch(Dispatchers.IO) {
         repository.removeTvShowBookmark(tvShowId)
     }
 }

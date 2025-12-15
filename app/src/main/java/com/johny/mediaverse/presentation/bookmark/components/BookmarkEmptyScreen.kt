@@ -1,66 +1,125 @@
 package com.johny.mediaverse.presentation.bookmark.components
 
-import androidx.annotation.RawRes
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
-import com.johny.mediaverse.R
+import androidx.compose.ui.unit.sp
+import com.johny.mediaverse.core.presentation.components.Perspective
+import com.johny.mediaverse.core.presentation.components.ThreeDimensionalLayout
 import com.johny.mediaverse.presentation.ui.theme.MediaVerseTheme
+import com.johny.mediaverse.presentation.ui.theme.addToBookmarkButtonBg
+import com.johny.mediaverse.presentation.ui.theme.noDataFoundBackground
+
 
 @Composable
 fun BookmarkEmptyScreen(
     modifier: Modifier = Modifier,
-    message: String,
-    @RawRes animation: Int
+    title: String,
+    info: String,
+    label: String,
+    action: () -> Unit,
 ) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Box(
+        modifier = modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(animation))
-        val progress by animateLottieCompositionAsState(
-            composition = composition,
-            iterations = LottieConstants.IterateForever
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp)
+                .border(2.dp, noDataFoundBackground)
+                .background(addToBookmarkButtonBg)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = title.uppercase(),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold, fontSize = 28.sp, color = Color.Black
+                ),
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
 
-        LottieAnimation(
-            composition = composition,
-            progress = { progress },
-            modifier = Modifier.size(200.dp)
-        )
-        Text(
-            text = message,
-            style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.Center
-        )
+            Text(
+                text = info,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = Color.DarkGray, fontSize = 16.sp, lineHeight = 22.sp
+                ),
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
+
+            HorizontalDivider(color = Color.Black, thickness = 2.dp)
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+
+                ThreeDimensionalLayout(
+                    perspective = Perspective.Left(
+                        bottomEdgeColor = Color.Black,
+                        rightEdgeColor = Color.Black
+                    ),
+                    edgeOffset = 6.dp,
+                    onClick = action
+                ) {
+
+                    Box(
+                        modifier = Modifier
+                            .border(2.dp, Color.Black)
+                            .background(Color(0xFF00E676))
+                            .padding(horizontal = 24.dp, vertical = 12.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                                color = Color.Black
+                            ),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
 @Preview
 @Composable
-private fun BookmarkEmptyPreview() {
+private fun EmptyScreenPreviewTest() {
     MediaVerseTheme {
         BookmarkEmptyScreen(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
-            message = "Bookmark Related Text Shows Here",
-            animation = R.raw.tv_show,
+            title = "No Data Found",
+            info = "You haven’t bookmarked any movies yet. Start exploring and save your favorites to see them",
+            label = "Add Movie to Bookmark",
+            action = {}
         )
     }
 }

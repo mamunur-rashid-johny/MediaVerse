@@ -7,14 +7,22 @@ import com.johny.mediaverse.core.presentation.utils.ObserveAsEvent
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun MovieBookmarkRoute(modifier: Modifier = Modifier,onItemClick:(Int)->Unit) {
+fun MovieBookmarkRoute(
+    modifier: Modifier = Modifier,
+    onItemClick: (Int) -> Unit,
+    onNavigateToMovie: () -> Unit
+) {
     val viewModel: MovieBookmarkViewModel = koinViewModel()
     val moviePager = viewModel.savedMovie.collectAsLazyPagingItems()
 
     ObserveAsEvent(events = viewModel.effect) { effect ->
         when (effect) {
-            is MovieBookmarkEffect.OnNavigateToMovieDetailEffect ->{
+            is MovieBookmarkEffect.OnNavigateToMovieDetailEffect -> {
                 onItemClick(effect.movieId)
+            }
+
+            MovieBookmarkEffect.MovieScreenNavigationEffect -> {
+                onNavigateToMovie()
             }
         }
     }

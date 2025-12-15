@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
-import com.johny.mediaverse.R
 import com.johny.mediaverse.data.local.model.movie.MovieEntity
 import com.johny.mediaverse.data.mapper.toMovieUIModel
 import com.johny.mediaverse.presentation.bookmark.components.BookmarkEmptyScreen
@@ -35,88 +34,91 @@ fun MovieBookmarkScreen(
     val isInitialLoading = movies.loadState.refresh is LoadState.Loading && movies.itemCount == 0
     val isListEmpty = movies.loadState.refresh is LoadState.NotLoading && movies.itemCount == 0
 
+    if (isListEmpty) {
+        BookmarkEmptyScreen(
+            title = "No Data Found",
+            info = "You haven’t bookmarked any movies yet. Start exploring and save your favorites to see them",
+            label = "Add Movie to Bookmark",
+            action = {
+                onIntent(MovieBookmarkIntent.OnNavigateToMovie)
+            }
+        )
+    } else {
 
-    LazyVerticalGrid(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(PaddingValues(12.dp)),
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        columns = GridCells.Fixed(2)
-    ) {
-        when{
-            isInitialLoading ->{
-                items(10) {
-                    MovieGridItemShimmer()
-                }
-            }
-            isListEmpty -> {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    BookmarkEmptyScreen(
-                        modifier = Modifier.fillMaxSize(),
-                        message = "No Movies Bookmarked Yet!",
-                        animation = R.raw.movie
-                    )
-                }
-            }
-            else -> {
-                items(
-                    count = movies.itemCount,
-                    key = movies.itemKey { it.toMovieUIModel().movie.id }
-                ) { index ->
-                    val movie = movies[index]
-                    movie?.let {
-                        MovieGridItem(
-                            movieUi = movie.toMovieUIModel(),
-                            onItemClick = { p ->
-                                onIntent(
-                                    MovieBookmarkIntent.OnMovieBookmarkClickIntent(
-                                        p.id
-                                    )
-                                )
-                            },
-                            onAddBookmark = { _ -> },
-                            onRemoveBookmark = { id ->
-                                Log.e("TAG", "MovieBookmarkScreen: $id" )
-                                onIntent(
-                                    MovieBookmarkIntent.OnMovieBookRemoveIntent(
-                                        id
-                                    )
-                                )
-                            }
-                        )
-                    }
-                }
-            }
-        }
-
-        movies.apply {
+        LazyVerticalGrid(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(PaddingValues(12.dp)),
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            columns = GridCells.Fixed(2)
+        ) {
             when {
-                loadState.append is LoadState.Loading -> {
-                    item(
-                        span = { GridItemSpan(maxLineSpan) }
-                    ) {
-                        LoadingRow()
+                isInitialLoading -> {
+                    items(10) {
+                        MovieGridItemShimmer()
                     }
                 }
 
-                loadState.refresh is LoadState.Error -> {
-                    if (movies.itemCount == 0){
-                        item(span = { GridItemSpan(maxLineSpan) }) {
-                            FullScreenError(onClickRetry = { retry() })
+                else -> {
+                    items(
+                        count = movies.itemCount,
+                        key = movies.itemKey { it.toMovieUIModel().movie.id }
+                    ) { index ->
+                        val movie = movies[index]
+                        movie?.let {
+                            MovieGridItem(
+                                movieUi = movie.toMovieUIModel(),
+                                onItemClick = { p ->
+                                    onIntent(
+                                        MovieBookmarkIntent.OnMovieBookmarkClickIntent(
+                                            p.id
+                                        )
+                                    )
+                                },
+                                onAddBookmark = { _ -> },
+                                onRemoveBookmark = { id ->
+                                    Log.e("TAG", "MovieBookmarkScreen: $id")
+                                    onIntent(
+                                        MovieBookmarkIntent.OnMovieBookRemoveIntent(
+                                            id
+                                        )
+                                    )
+                                }
+                            )
                         }
                     }
                 }
+            }
 
-                loadState.append is LoadState.Error -> {
-                    val error = loadState.append as LoadState.Error
-                    item(
-                        span = { GridItemSpan(maxLineSpan) }
-                    ) {
-                        ErrorRow(
-                            message = error.error.message,
-                            onClickRetry = { retry() })
+            movies.apply {
+                when {
+                    loadState.append is LoadState.Loading -> {
+                        item(
+                            span = { GridItemSpan(maxLineSpan) }
+                        ) {
+                            LoadingRow()
+                        }
+                    }
+
+                    loadState.refresh is LoadState.Error -> {
+                        if (movies.itemCount == 0) {
+                            item(span = { GridItemSpan(maxLineSpan) }) {
+                                FullScreenError(onClickRetry = { retry() })
+                            }
+                        }
+                    }
+
+                    loadState.append is LoadState.Error -> {
+                        val error = loadState.append as LoadState.Error
+                        item(
+                            span = { GridItemSpan(maxLineSpan) }
+                        ) {
+                            ErrorRow(
+                                message = error.error.message,
+                                onClickRetry = { retry() })
+                        }
                     }
                 }
             }

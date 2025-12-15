@@ -2,7 +2,9 @@ package com.johny.mediaverse.presentation.bookmark
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.johny.mediaverse.presentation.bookmark.BookmarkEffect.*
+import com.johny.mediaverse.presentation.bookmark.BookmarkEffect.NavigateToMovieDetails
+import com.johny.mediaverse.presentation.bookmark.BookmarkEffect.NavigateToPodcastDetails
+import com.johny.mediaverse.presentation.bookmark.BookmarkEffect.NavigateToTvShowDetails
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -14,7 +16,6 @@ class BookmarkViewModel : ViewModel() {
 
     val state: StateFlow<BookmarkState>
         field = MutableStateFlow(BookmarkState())
-
 
     val effect: SharedFlow<BookmarkEffect>
         field = MutableSharedFlow<BookmarkEffect>()
@@ -35,6 +36,18 @@ class BookmarkViewModel : ViewModel() {
 
             is BookmarkIntent.OnUpdateTabIndex -> {
                 updateIndex(intent.index)
+            }
+
+            BookmarkIntent.OnNavigateToMovie -> {
+                effect.emit(BookmarkEffect.NavigateToMovie)
+            }
+
+            BookmarkIntent.OnNavigateToPodcast -> {
+                effect.emit(BookmarkEffect.NavigateToPodcast)
+            }
+
+            BookmarkIntent.OnNavigateToTvShow -> {
+                effect.emit(BookmarkEffect.NavigateToTvShow)
             }
         }
     }

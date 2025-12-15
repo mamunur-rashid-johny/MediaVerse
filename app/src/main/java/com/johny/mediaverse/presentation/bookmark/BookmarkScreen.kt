@@ -83,6 +83,9 @@ fun BookmarkScreen(
                 modifier = modifier.weight(1f),
                 onItemClick = {
                     onIntent(BookmarkIntent.OnNavigateToMovieDetails(it))
+                },
+                onNavigateToMovie = {
+                    onIntent(BookmarkIntent.OnNavigateToMovie)
                 }
             )
 
@@ -90,6 +93,9 @@ fun BookmarkScreen(
                 modifier = modifier.weight(1f),
                 onItemClick = {
                     onIntent(BookmarkIntent.OnNavigateToTvShowDetails(it))
+                },
+                onNavigateToTvShow = {
+                    onIntent(BookmarkIntent.OnNavigateToTvShow)
                 }
             )
 
@@ -97,6 +103,9 @@ fun BookmarkScreen(
                 modifier = modifier.weight(1f),
                 onItemClick = {
                     onIntent(BookmarkIntent.OnNavigateToPodcastDetails(it))
+                },
+                onNavigateToPodcast = {
+                    onIntent(BookmarkIntent.OnNavigateToPodcast)
                 }
             )
         }

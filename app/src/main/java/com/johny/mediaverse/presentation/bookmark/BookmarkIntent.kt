@@ -7,4 +7,7 @@ sealed interface BookmarkIntent {
     data class OnNavigateToTvShowDetails(val tvShowId: Int) : BookmarkIntent
     data class OnNavigateToPodcastDetails(val podcast: Podcast) : BookmarkIntent
     data class OnUpdateTabIndex(val index: Int) : BookmarkIntent
+    data object OnNavigateToMovie: BookmarkIntent
+    data object OnNavigateToTvShow: BookmarkIntent
+    data object OnNavigateToPodcast: BookmarkIntent
 }

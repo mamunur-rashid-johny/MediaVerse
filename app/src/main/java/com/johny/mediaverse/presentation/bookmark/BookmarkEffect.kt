@@ -6,4 +6,7 @@ sealed interface BookmarkEffect {
     data class NavigateToPodcastDetails(val podcast: Podcast) : BookmarkEffect
     data class NavigateToMovieDetails(val movieId: Int) : BookmarkEffect
     data class NavigateToTvShowDetails(val tvShowId: Int) : BookmarkEffect
+    data object NavigateToMovie : BookmarkEffect
+    data object NavigateToTvShow : BookmarkEffect
+    data object NavigateToPodcast : BookmarkEffect
 }

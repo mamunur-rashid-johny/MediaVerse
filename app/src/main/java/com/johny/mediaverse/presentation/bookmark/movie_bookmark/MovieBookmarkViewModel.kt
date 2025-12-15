@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.johny.mediaverse.data.local.model.movie.MovieEntity
 import com.johny.mediaverse.domain.repository.BookmarkRepository
+import com.johny.mediaverse.presentation.bookmark.movie_bookmark.MovieBookmarkEffect.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -28,7 +29,11 @@ class MovieBookmarkViewModel(
                 removeMovieBookmark(intent.movieId)
             }
             is MovieBookmarkIntent.OnMovieBookmarkClickIntent ->{
-                effect.emit(MovieBookmarkEffect.OnNavigateToMovieDetailEffect(intent.movieId))
+                effect.emit(OnNavigateToMovieDetailEffect(intent.movieId))
+            }
+
+            MovieBookmarkIntent.OnNavigateToMovie -> {
+                effect.emit(MovieScreenNavigationEffect)
             }
         }
     }

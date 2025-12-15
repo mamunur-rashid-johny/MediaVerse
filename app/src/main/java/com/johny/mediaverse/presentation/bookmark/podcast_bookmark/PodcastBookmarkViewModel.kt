@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.johny.mediaverse.data.local.model.podcast.PodcastEntity
 import com.johny.mediaverse.domain.repository.BookmarkRepository
+import com.johny.mediaverse.presentation.bookmark.podcast_bookmark.PodcastBookmarkEffect.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -28,7 +29,11 @@ class PodcastBookmarkViewModel(
                 removeBookmark(intent.podcastId)
             }
             is PodcastBookmarkIntent.OnPodcastBookmarkClickIntent ->{
-                effect.emit(PodcastBookmarkEffect.OnNavigateToPodcastDetailEffect(intent.podcast))
+                effect.emit(OnNavigateToPodcastDetailEffect(intent.podcast))
+            }
+
+            PodcastBookmarkIntent.OnNavigateToPodcast -> {
+                effect.emit(PodcastScreenNavigationEffect)
             }
         }
     }
