@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.johny.mediaverse.core.navigation.Destination.MovieDetailRoute
 import com.johny.mediaverse.core.navigation.Destination.MovieRoute
 import com.johny.mediaverse.core.navigation.Destination.PodcastDetailRoute
@@ -32,15 +33,33 @@ fun BookmarkRoute(navController: NavController) {
             }
 
             BookmarkEffect.NavigateToMovie -> {
-                navController.navigate(MovieRoute)
+                navController.navigate(MovieRoute){
+                    popUpTo(navController.graph.findStartDestination().id){
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
             }
 
             BookmarkEffect.NavigateToPodcast -> {
-                navController.navigate(PodcastRoute)
+                navController.navigate(PodcastRoute){
+                    popUpTo(navController.graph.findStartDestination().id){
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
             }
 
             BookmarkEffect.NavigateToTvShow -> {
-                navController.navigate(TvShowRoute)
+                navController.navigate(TvShowRoute){
+                    popUpTo(navController.graph.findStartDestination().id){
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
             }
         }
     }

@@ -7,5 +7,6 @@ sealed interface MovieIntent {
     data class SaveBookmarkIntent(val movie: MovieModel) : MovieIntent
     data class RemoveBookmarkIntent(val movieId: Int) : MovieIntent
     data class OnMovieDetailsNavigateIntent(val movieId: Int) : MovieIntent
-    data class ShowErrorIntent(val message: String, val actionLabel: String) : MovieIntent
+    data object OnRetryPagination: MovieIntent
+
 }

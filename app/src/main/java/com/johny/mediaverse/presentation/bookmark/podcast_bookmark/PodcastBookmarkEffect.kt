@@ -6,4 +6,5 @@ import com.johny.mediaverse.presentation.bookmark.movie_bookmark.MovieBookmarkEf
 sealed interface PodcastBookmarkEffect {
     data class OnNavigateToPodcastDetailEffect(val podcast: Podcast) : PodcastBookmarkEffect
     data object PodcastScreenNavigationEffect: PodcastBookmarkEffect
+    data class ShowMessageEffect(val podcast: Podcast): PodcastBookmarkEffect
 }

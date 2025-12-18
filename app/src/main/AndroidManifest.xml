@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -46,6 +47,13 @@
             <meta-data
                 android:name="com.johny.mediaverse.core.startup.FirebaseRemoteConfigInitializer"
                 android:value="@string/androidx_startup" />
+            <meta-data
+                android:name="com.johny.mediaverse.core.startup.FirebaseAppCheckerInitializer"
+                android:value="@string/androidx_startup" />
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="@string/androidx_startup"
+                tools:node="remove" />
         </provider>
     </application>
 

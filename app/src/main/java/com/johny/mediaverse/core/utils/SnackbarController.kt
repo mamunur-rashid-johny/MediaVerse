@@ -1,11 +1,13 @@
 package com.johny.mediaverse.core.utils
 
+import androidx.compose.material3.SnackbarDuration
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
 data class SnackbarEvent(
     val message: String,
-    val action: SnackbarAction? = null
+    val action: SnackbarAction? = null,
+    val snackbarDuration: SnackbarDuration = SnackbarDuration.Short
 )
 
 data class SnackbarAction(

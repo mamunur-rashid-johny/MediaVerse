@@ -1,4 +1,4 @@
-package com.johny.mediaverse.presentation.movie.components
+package com.johny.mediaverse.presentation.bookmark.tv_show_bookmark
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,25 +38,30 @@ import androidx.compose.ui.unit.dp
 import com.johny.mediaverse.R
 import com.johny.mediaverse.core.utils.Constants
 import com.johny.mediaverse.domain.config.PosterSize
-import com.johny.mediaverse.domain.model.movie.MovieModel
-import com.johny.mediaverse.presentation.movie.MovieIntent
-import com.johny.mediaverse.presentation.movie.model.MovieModelUi
+import com.johny.mediaverse.domain.model.tv_show.TvShowModel
+import com.johny.mediaverse.presentation.tv_show.model.TvShowUiModel
 import com.johny.mediaverse.presentation.ui.theme.MediaVerseTheme
 import com.johny.mediaverse.utils.shimmerEffect
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 
+/**
+ * Created by Johny on 18/12/25.
+ * Copyright (c) 2025 Pathao Ltd. All rights reserved.
+ */
 
 @Composable
-fun MovieGridItem(
+fun TvShowBookmarkItem(
     modifier: Modifier = Modifier,
-    movieUi: MovieModelUi,
-    onIntent: (MovieIntent) -> Unit
+    tvShowUi: TvShowUiModel,
+    onIntent: (TvShowBookmarkIntent) -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onIntent(MovieIntent.OnMovieDetailsNavigateIntent(movieUi.movie.id)) }
+            .clickable {
+                onIntent(TvShowBookmarkIntent.OnTvShowBookmarkClickIntent(tvShowUi.tvShow.id))
+            }
     ) {
         Box(
             modifier = Modifier
@@ -70,7 +75,7 @@ fun MovieGridItem(
             ) {
                 CoilImage(
                     modifier = Modifier.fillMaxSize(),
-                    imageModel = { Constants.MovieDbUrl.IMAGE_ROOT_PATH + PosterSize.W500.value + movieUi.movie.posterPath },
+                    imageModel = { Constants.MovieDbUrl.IMAGE_ROOT_PATH + PosterSize.W500.value + tvShowUi.tvShow.posterPath },
                     imageOptions = ImageOptions(
                         contentScale = ContentScale.Crop,
                         alignment = Alignment.Center
@@ -81,9 +86,11 @@ fun MovieGridItem(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Box(modifier = Modifier
-                                .fillMaxSize()
-                                .shimmerEffect())
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .shimmerEffect()
+                            )
                         }
                     }
                 )
@@ -98,11 +105,7 @@ fun MovieGridItem(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
                         onClick = {
-                           val intent =  if (movieUi.isBookmark) {
-                               MovieIntent.RemoveBookmarkIntent(movieUi.movie.id)
-                            } else {
-                               MovieIntent.SaveBookmarkIntent(movieUi.movie)
-                            }
+                            val intent = TvShowBookmarkIntent.OnTvShowBookRemoveIntent(tvShowUi.tvShow)
                             onIntent(intent)
                         }
                     ),
@@ -114,11 +117,12 @@ fun MovieGridItem(
                         .background(Color.Black.copy(alpha = 0.6f), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
+                    val (icon, color) = if (tvShowUi.isBookmarked) Icons.Default.Bookmark to MaterialTheme.colorScheme.primary else Icons.Default.BookmarkBorder to Color.White
                     Icon(
-                        imageVector = if (movieUi.isBookmark) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
-                        contentDescription = if (movieUi.isBookmark) "Remove from bookmarks" else "Add to bookmarks",
+                        imageVector = icon,
+                        contentDescription = null,
                         modifier = Modifier.size(18.dp),
-                        tint = if (movieUi.isBookmark) MaterialTheme.colorScheme.primary else Color.White
+                        tint = color
                     )
                 }
             }
@@ -131,7 +135,7 @@ fun MovieGridItem(
                 .padding(top = 8.dp, start = 4.dp, end = 4.dp)
         ) {
             Text(
-                text = movieUi.movie.title,
+                text = tvShowUi.tvShow.title,
                 style = MaterialTheme.typography.titleSmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -144,7 +148,7 @@ fun MovieGridItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = movieUi.movie.year,
+                    text = tvShowUi.tvShow.year,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -157,7 +161,7 @@ fun MovieGridItem(
                 )
                 Spacer(modifier = Modifier.width(2.dp))
                 Text(
-                    text = movieUi.movie.rating.toString(),
+                    text = tvShowUi.tvShow.rating.toString(),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold
@@ -170,20 +174,20 @@ fun MovieGridItem(
 
 @Preview
 @Composable
-private fun MovieGridPreview() {
+private fun TvShowItemPreview() {
     MediaVerseTheme {
-        val dummy = MovieModelUi(
-            movie = MovieModel(
+        val dummy = TvShowUiModel(
+            tvShow = TvShowModel(
                 id = 1,
                 title = "The Lost Horizon",
                 rating = 7.8,
                 releaseDate = "2021-05-14",
                 posterPath = "/images/posters/lost_horizon.jpg"
             ),
-            isBookmark = false
+            isBookmarked = false
         )
-        MovieGridItem(
-            movieUi = dummy
+        TvShowBookmarkItem(
+            tvShowUi = dummy
         ) { }
     }
 }

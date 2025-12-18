@@ -34,6 +34,10 @@ class BookmarkRepositoryImp(
         podcastDao.removePodcast(podcastId)
     }
 
+    override suspend fun undoPodcast(podcastEntity: PodcastEntity) {
+        podcastDao.savePodcast(podcastEntity)
+    }
+
     override fun getPagedMovie(): Flow<PagingData<MovieEntity>> {
         return Pager(
             config = PagingConfig(
@@ -51,6 +55,10 @@ class BookmarkRepositoryImp(
         movieDao.removeMovie(movieId = movieId)
     }
 
+    override suspend fun undoMovie(movieEntity: MovieEntity) {
+        movieDao.saveMovie(movieEntity)
+    }
+
     override fun getPagedTvShow(): Flow<PagingData<TvShowEntity>> {
         return Pager(
             config = PagingConfig(
@@ -66,5 +74,9 @@ class BookmarkRepositoryImp(
 
     override suspend fun removeTvShowBookmark(tvShowId: Int) {
         tvShowDao.removeTvShow(tvShowId)
+    }
+
+    override suspend fun undoTvShow(tvShowEntity: TvShowEntity) {
+        tvShowDao.saveTvShow(tvShowEntity)
     }
 }

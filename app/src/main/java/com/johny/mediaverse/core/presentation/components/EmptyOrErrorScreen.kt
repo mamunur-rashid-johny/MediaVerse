@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.johny.mediaverse.core.presentation.utils.Perspective
 import com.johny.mediaverse.presentation.ui.theme.MediaVerseTheme
 import com.johny.mediaverse.presentation.ui.theme.addToBookmarkButtonBg
 import com.johny.mediaverse.presentation.ui.theme.elevatedButtonBg
@@ -30,11 +31,11 @@ import com.johny.mediaverse.presentation.ui.theme.noDataFoundBackground
 
 
 @Composable
-fun EmptyScreen(
+fun EmptyOrErrorScreen(
     modifier: Modifier = Modifier,
     title: String,
     info: String,
-    label: String,
+    primaryLabel: String,
     action: () -> Unit,
 ) {
     Box(
@@ -45,7 +46,7 @@ fun EmptyScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp)
+                .padding(16.dp)
                 .border(2.dp, noDataFoundBackground)
                 .background(addToBookmarkButtonBg)
                 .padding(24.dp),
@@ -78,7 +79,7 @@ fun EmptyScreen(
             ) {
 
 
-                ThreeDimensionalLayout(
+                ThreeDimenWithEvent(
                     perspective = Perspective.Left(
                         bottomEdgeColor = Color.Black,
                         rightEdgeColor = Color.Black
@@ -95,7 +96,7 @@ fun EmptyScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = label,
+                            text = primaryLabel,
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp,
@@ -110,14 +111,15 @@ fun EmptyScreen(
     }
 }
 
+
 @Preview
 @Composable
-private fun EmptyScreenPreviewTest() {
+private fun EmptyOrErrorScreenPreviewTest() {
     MediaVerseTheme {
-        EmptyScreen(
+        EmptyOrErrorScreen(
             title = "No Data Found",
             info = "You haven’t bookmarked any movies yet. Start exploring and save your favorites to see them",
-            label = "Add Movie to Bookmark",
+            primaryLabel = "Add Movie to Bookmark",
             action = {}
         )
     }

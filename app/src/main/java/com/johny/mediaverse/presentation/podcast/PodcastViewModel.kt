@@ -12,7 +12,7 @@ import com.johny.mediaverse.presentation.podcast.ui_model.PodcastUIModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
@@ -21,7 +21,7 @@ class PodcastViewModel(
 ) : ViewModel() {
 
     val pagingFlow: Flow<PagingData<Podcast>> = repository.getBestPodcasts()
-            .cachedIn(viewModelScope)
+        .cachedIn(viewModelScope)
 
     private val bookmarksFlow = repository.getSavedPodcastIds()
 
@@ -35,13 +35,13 @@ class PodcastViewModel(
             }
         }
 
-    private val _effect = MutableSharedFlow<PodcastEffect>()
-    val effect = _effect.asSharedFlow()
+    val effect: SharedFlow<PodcastEffect>
+        field = MutableSharedFlow<PodcastEffect>()
 
     fun onIntent(intent: PodcastIntent) = viewModelScope.launch {
         when (intent) {
             is PodcastIntent.OnItemClick -> {
-                _effect.emit(NavigateToDetail(intent.podcast))
+                effect.emit(NavigateToDetail(intent.podcast))
             }
 
             is PodcastIntent.OnAddBookMark -> {
@@ -50,6 +50,10 @@ class PodcastViewModel(
 
             is PodcastIntent.OnRemoveBookmark -> {
                 removeBookmark(intent.podcastId)
+            }
+
+            PodcastIntent.RetryPagination -> {
+                effect.emit(PodcastEffect.RetryPaginationEffect)
             }
         }
     }

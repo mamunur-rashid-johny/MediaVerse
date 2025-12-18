@@ -2,14 +2,13 @@ package com.johny.mediaverse.presentation.movie
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -20,6 +19,8 @@ import com.johny.mediaverse.core.presentation.utils.ObserveAsEvent
 import com.johny.mediaverse.core.utils.SnackbarAction
 import com.johny.mediaverse.core.utils.SnackbarController
 import com.johny.mediaverse.core.utils.SnackbarEvent
+import com.johny.mediaverse.utils.checkInternet
+import com.johny.mediaverse.utils.openConnectivitySettings
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -27,7 +28,7 @@ import org.koin.androidx.compose.koinViewModel
 internal fun MovieRoute(navController: NavController) {
     val viewModel: MovieViewModel = koinViewModel()
     val moviesPager = viewModel.movies.collectAsLazyPagingItems()
-    var showExitDialog by remember { mutableStateOf(false) }
+    val showExitDialog = remember { mutableStateOf(false) }
     val context = LocalContext.current
     val activity = context as? android.app.Activity
     val scope = rememberCoroutineScope()
@@ -46,26 +47,30 @@ internal fun MovieRoute(navController: NavController) {
                 }
             }
 
-            is MovieSideEffect.ShowError -> {
-                scope.launch {
-                    SnackbarController.sendEvent(
-                        SnackbarEvent(
-                            message = effect.message,
-                            action = SnackbarAction(
-                                name = effect.actionLabel,
-                                action = {
-                                    moviesPager.retry()
-                                }
+            MovieSideEffect.RetryPaginationEffect -> {
+                if (context.checkInternet()) {
+                    moviesPager.retry()
+                } else {
+                    scope.launch {
+                        SnackbarController.sendEvent(
+                            SnackbarEvent(
+                                message = "No Internet Connection is Available",
+                                action = SnackbarAction(
+                                    name = "Settings",
+                                    action = {
+                                        context.openConnectivitySettings()
+                                    }
+                                )
                             )
                         )
-                    )
+                    }
                 }
             }
         }
     }
 
     BackHandler {
-        showExitDialog = true
+        showExitDialog.value = true
     }
 
     MovieScreen(
@@ -73,34 +78,40 @@ internal fun MovieRoute(navController: NavController) {
         onIntent = viewModel::onIntent
     )
 
-    if (showExitDialog) {
+    if (showExitDialog.value) {
         AlertDialog(
             onDismissRequest = {
-                showExitDialog = false
+                showExitDialog.value = false
             },
             title = {
-                Text(text = "Confirm Exit")
+                Text(
+                    text = "Confirm Exit",
+                    style = MaterialTheme.typography.titleLarge
+                )
             },
             text = {
-                Text(text = "Are you sure you want to exit the app?")
+                Text(
+                    text = "Are you sure you want to exit the app?",
+                    style = MaterialTheme.typography.bodyLarge
+                )
             },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        showExitDialog = false
+                        showExitDialog.value = false
                         activity?.finish()
                     }
                 ) {
-                    Text("Yes")
+                    Text("Yes", style = MaterialTheme.typography.labelLarge)
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
-                        showExitDialog = false
+                        showExitDialog.value = false
                     }
                 ) {
-                    Text("No")
+                    Text("No", style = MaterialTheme.typography.labelLarge)
                 }
             }
         )

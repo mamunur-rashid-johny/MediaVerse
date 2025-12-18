@@ -4,4 +4,5 @@ import com.johny.mediaverse.domain.model.podcast.Podcast
 
 sealed interface PodcastEffect {
     data class NavigateToDetail(val podcast: Podcast): PodcastEffect
+    data object RetryPaginationEffect: PodcastEffect
 }

@@ -22,15 +22,17 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.johny.mediaverse.core.presentation.utils.Perspective
 
 
 @Composable
-fun ThreeDimensionalLayout(
+fun ThreeDimenWithEvent(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     perspective: Perspective = Perspective.Left(
         bottomEdgeColor = Color.Black, rightEdgeColor = Color.Black
-    ), edgeOffset: Dp = 16.dp, content: @Composable () -> Unit
+    ), edgeOffset: Dp = 16.dp,
+    content: @Composable () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -153,19 +155,4 @@ fun ThreeDimensionalLayout(
             content()
         }
     }
-}
-
-sealed class Perspective(
-) {
-    data class Left(
-        val bottomEdgeColor: Color, val rightEdgeColor: Color
-    ) : Perspective()
-
-    data class Right(
-        val topEdgeColor: Color, val leftEdgeColor: Color
-    ) : Perspective()
-
-    data class Top(
-        val bottomEdgeColor: Color
-    ) : Perspective()
 }

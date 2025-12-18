@@ -1,5 +1,6 @@
 package com.johny.mediaverse.data.repository
 
+import android.content.Context
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -16,7 +17,8 @@ import kotlinx.coroutines.flow.map
 @OptIn(ExperimentalCoroutinesApi::class)
 class PodcastRepositoryImp(
     private val api: ListenNoteApi,
-    private val dao: PodcastDao
+    private val dao: PodcastDao,
+    private val context: Context
 ) : PodcastRepository {
     override fun getBestPodcasts(): Flow<PagingData<Podcast>> {
         return Pager(
@@ -26,7 +28,7 @@ class PodcastRepositoryImp(
                 prefetchDistance = 5
             ),
             pagingSourceFactory = {
-                PodcastPagingSource(api)
+                PodcastPagingSource(api,context)
             }
         ).flow
     }

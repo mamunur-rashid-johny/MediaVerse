@@ -1,5 +1,9 @@
-package com.johny.mediaverse.presentation.podcast.components
+package com.johny.mediaverse.presentation.bookmark.podcast_bookmark
 
+/**
+ * Created by Johny on 18/12/25.
+ * Copyright (c) 2025 Pathao Ltd. All rights reserved.
+ */
 
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
@@ -29,7 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.johny.mediaverse.R
 import com.johny.mediaverse.domain.model.podcast.Podcast
-import com.johny.mediaverse.presentation.podcast.PodcastIntent
 import com.johny.mediaverse.presentation.podcast.ui_model.PodcastUIModel
 import com.johny.mediaverse.presentation.ui.theme.AppTypography
 import com.johny.mediaverse.presentation.ui.theme.MediaVerseTheme
@@ -37,15 +40,15 @@ import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 
 @Composable
-fun PodcastItem(
+fun PodcastBookmarkItem(
     podcastUi: PodcastUIModel,
-    onIntent:(PodcastIntent) -> Unit
+    onIntent:(PodcastBookmarkIntent) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                onIntent(PodcastIntent.OnItemClick(podcastUi.podcast))
+                onIntent(PodcastBookmarkIntent.OnPodcastBookmarkClickIntent(podcastUi.podcast))
             }
             .padding(vertical = 12.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -84,11 +87,7 @@ fun PodcastItem(
         }
 
         IconButton(onClick = {
-            val intent = if (podcastUi.isBookmark) {
-                PodcastIntent.OnRemoveBookmark(podcastUi.podcast.id)
-            } else {
-                PodcastIntent.OnAddBookMark(podcastUi.podcast)
-            }
+            val intent = PodcastBookmarkIntent.OnPodcastBookRemoveIntent(podcastUi.podcast)
             onIntent(intent)
         }) {
             val (icon, tint) = if (podcastUi.isBookmark) {
@@ -112,7 +111,7 @@ fun PodcastItem(
 private fun PodcastItemPreview() {
 
     MediaVerseTheme {
-        PodcastItem(
+        PodcastBookmarkItem(
             podcastUi = PodcastUIModel(
                 podcast = Podcast(
                     "take",

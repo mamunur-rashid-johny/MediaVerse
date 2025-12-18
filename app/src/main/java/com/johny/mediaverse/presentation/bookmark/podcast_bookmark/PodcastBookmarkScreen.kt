@@ -11,31 +11,26 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
+import com.johny.mediaverse.core.presentation.components.EmptyOrErrorScreen
+import com.johny.mediaverse.core.presentation.components.ErrorRow
+import com.johny.mediaverse.core.presentation.components.LoadingRow
 import com.johny.mediaverse.data.local.model.podcast.PodcastEntity
 import com.johny.mediaverse.data.mapper.toPodcastUiModel
-import com.johny.mediaverse.core.presentation.components.EmptyScreen
-import com.johny.mediaverse.presentation.podcast.components.ErrorRow
-import com.johny.mediaverse.presentation.podcast.components.FullScreenError
-import com.johny.mediaverse.presentation.podcast.components.LoadingRow
-import com.johny.mediaverse.presentation.podcast.components.PodcastItem
-import com.johny.mediaverse.presentation.podcast.components.PodcastItemShimmer
 
 @Composable
 fun PodcastBookmarkScreen(
     modifier: Modifier,
-    podcastEntity: LazyPagingItems<PodcastEntity>,
+    podcast: LazyPagingItems<PodcastEntity>,
     onIntent: (PodcastBookmarkIntent) -> Unit
 ) {
-    val isInitialLoading =
-        podcastEntity.loadState.refresh is LoadState.Loading && podcastEntity.itemCount == 0
-    val isListEmpty =
-        podcastEntity.loadState.refresh is LoadState.NotLoading && podcastEntity.itemCount == 0
+
+    val isListEmpty = podcast.loadState.refresh is LoadState.Error && podcast.itemCount == 0
 
     if (isListEmpty) {
-        EmptyScreen(
+        EmptyOrErrorScreen(
             title = "No Data Found",
             info = "You haven’t bookmarked any movies yet. Start exploring and save your favorites to see them",
-            label = "Add Podcast to Bookmark",
+            primaryLabel = "Add Podcast to Bookmark",
             action = {
                 onIntent(PodcastBookmarkIntent.OnNavigateToPodcast)
             }
@@ -47,59 +42,43 @@ fun PodcastBookmarkScreen(
                 .padding(PaddingValues(12.dp)),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
         ) {
-            when {
-                isInitialLoading -> {
-                    items(10) {
-                        PodcastItemShimmer()
+            items(
+                count = podcast.itemCount,
+                key = podcast.itemKey { it.id }
+            ) { index ->
+                val podcastItem = podcast[index]
+                podcastItem?.let {
+                    PodcastBookmarkItem(
+                        podcastUi = it.toPodcastUiModel(),
+                        onIntent = onIntent
+                    )
+                    if (index < podcast.itemCount - 1){
                         HorizontalDivider()
-                    }
-                }
-
-                else -> {
-                    items(
-                        count = podcastEntity.itemCount,
-                        key = podcastEntity.itemKey { it.id }
-                    ) { index ->
-                        val podcast = podcastEntity[index]
-                        podcast?.let {
-                            PodcastItem(
-                                podcastUi = it.toPodcastUiModel(),
-                                onItemClick = { p ->
-                                    onIntent(
-                                        PodcastBookmarkIntent.OnPodcastBookmarkClickIntent(
-                                            p
-                                        )
-                                    )
-                                },
-                                onAddBookmark = {},
-                                onRemoveBookmark = { id ->
-                                    onIntent(
-                                        PodcastBookmarkIntent.OnPodcastBookRemoveIntent(
-                                            id
-                                        )
-                                    )
-                                }
-                            )
-                            HorizontalDivider()
-                        }
                     }
                 }
             }
 
-            podcastEntity.apply {
-                when {
-                    loadState.append is LoadState.Loading -> {
-                        item { LoadingRow() }
-                    }
-
-                    loadState.refresh is LoadState.Error -> {
-                        if (podcastEntity.itemCount == 0) {
-                            item { FullScreenError(onClickRetry = { retry() }) }
+            podcast.apply {
+                when (loadState.append) {
+                    is LoadState.Loading -> {
+                        item {
+                            LoadingRow()
                         }
                     }
 
-                    loadState.append is LoadState.Error -> {
-                        item { ErrorRow(onClickRetry = { retry() }) }
+                    is LoadState.Error -> {
+                        item {
+                            val error = podcast.loadState.append as LoadState.Error
+                            ErrorRow(
+                                message = error.error.message ?: "Unknown error"
+                            ) {
+                                retry()
+                            }
+                        }
+                    }
+
+                    else -> {
+                        //nothing to do
                     }
                 }
             }

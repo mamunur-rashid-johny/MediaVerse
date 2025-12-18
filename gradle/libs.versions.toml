@@ -27,6 +27,8 @@ lottie = "6.6.6"
 google-play-service = "4.4.4"
 firebase-bom = "34.6.0"
 startup = "1.2.0"
+firebaseAppcheckDebug = "19.0.1"
+work-manager = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -95,9 +97,15 @@ lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-remote-config = { module = "com.google.firebase:firebase-config" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-app-check = { module = "com.google.firebase:firebase-appcheck-playintegrity" }
+firebase-appcheck-debug = { group = "com.google.firebase", name = "firebase-appcheck-debug", version.ref = "firebaseAppcheckDebug" }
+
 
 #app start-up
 androidx-app-startup = { group = "androidx.startup", name = "startup-runtime", version.ref = "startup" }
+
+#work manager
+work-manager = {module="androidx.work:work-runtime-ktx",version.ref="work-manager"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

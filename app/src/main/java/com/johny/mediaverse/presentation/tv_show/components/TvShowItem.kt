@@ -39,6 +39,7 @@ import com.johny.mediaverse.R
 import com.johny.mediaverse.core.utils.Constants
 import com.johny.mediaverse.domain.config.PosterSize
 import com.johny.mediaverse.domain.model.tv_show.TvShowModel
+import com.johny.mediaverse.presentation.tv_show.TvShowIntent
 import com.johny.mediaverse.presentation.tv_show.model.TvShowUiModel
 import com.johny.mediaverse.presentation.ui.theme.MediaVerseTheme
 import com.johny.mediaverse.utils.shimmerEffect
@@ -46,17 +47,17 @@ import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 
 @Composable
-fun TvShowItem(
+fun TvShowItemGrid(
     modifier: Modifier = Modifier,
     tvShowUi: TvShowUiModel,
-    onItemClick: (TvShowModel) -> Unit,
-    onAddBookmark: (TvShowModel) -> Unit,
-    onRemoveBookmark: (Int) -> Unit
+    onIntent: (TvShowIntent) -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onItemClick(tvShowUi.tvShow) }
+            .clickable {
+                onIntent(TvShowIntent.NavigateToDetailsIntent(tvShowUi.tvShow.id))
+            }
     ) {
         Box(
             modifier = Modifier
@@ -81,7 +82,11 @@ fun TvShowItem(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Box(modifier = Modifier.fillMaxSize().shimmerEffect())
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .shimmerEffect()
+                            )
                         }
                     }
                 )
@@ -96,11 +101,12 @@ fun TvShowItem(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
                         onClick = {
-                            if (tvShowUi.isBookmarked) {
-                                onRemoveBookmark(tvShowUi.tvShow.id)
+                            val intent = if (tvShowUi.isBookmarked) {
+                                TvShowIntent.RemoveBookmarkIntent(tvShowUi.tvShow.id)
                             } else {
-                                onAddBookmark(tvShowUi.tvShow)
+                                TvShowIntent.SaveBookmarkIntent(tvShowUi.tvShow)
                             }
+                            onIntent(intent)
                         }
                     ),
                 contentAlignment = Alignment.Center
@@ -111,11 +117,12 @@ fun TvShowItem(
                         .background(Color.Black.copy(alpha = 0.6f), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
+                    val (icon, color) = if (tvShowUi.isBookmarked) Icons.Default.Bookmark to MaterialTheme.colorScheme.primary else Icons.Default.BookmarkBorder to Color.White
                     Icon(
-                        imageVector = if (tvShowUi.isBookmarked) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
-                        contentDescription = if (tvShowUi.isBookmarked) "Remove from bookmarks" else "Add to bookmarks",
+                        imageVector = icon,
+                        contentDescription = null,
                         modifier = Modifier.size(18.dp),
-                        tint = if (tvShowUi.isBookmarked) MaterialTheme.colorScheme.primary else Color.White
+                        tint = color
                     )
                 }
             }
@@ -179,10 +186,8 @@ private fun TvShowItemPreview() {
             ),
             isBookmarked = false
         )
-        TvShowItem(
-            tvShowUi = dummy,
-            onItemClick = {},
-            onAddBookmark = {}
+        TvShowItemGrid(
+            tvShowUi = dummy
         ) { }
     }
 }

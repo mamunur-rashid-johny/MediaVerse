@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.johny.mediaverse.domain.model.tv_show.TvShowModel
 import com.johny.mediaverse.domain.repository.TvShowRepository
+import com.johny.mediaverse.presentation.tv_show.TvShowSideEffect.*
 import com.johny.mediaverse.presentation.tv_show.model.TvShowUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -40,7 +41,7 @@ class TvShowViewModel(
     fun onIntent(intent: TvShowIntent) = viewModelScope.launch {
         when (intent) {
             is TvShowIntent.NavigateToDetailsIntent -> {
-                effect.emit(TvShowSideEffect.NavigateToDetailsEffect(intent.tvShowId))
+                effect.emit(NavigateToDetailsEffect(intent.tvShowId))
             }
 
             is TvShowIntent.RemoveBookmarkIntent -> {
@@ -51,8 +52,8 @@ class TvShowViewModel(
                 saveBookmark(intent.tvShowModel)
             }
 
-            is TvShowIntent.ShowErrorIntent -> {
-                effect.emit(TvShowSideEffect.ShowErrorEffect(intent.message, intent.actionLabel))
+            TvShowIntent.OnRetryPagination -> {
+                effect.emit(RetryPaginationEffect)
             }
         }
     }

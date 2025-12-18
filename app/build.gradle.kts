@@ -142,9 +142,15 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.remote.config)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.app.check)
+    implementation(libs.firebase.appcheck.debug)
     //</editor-fold>
 
     //<editor-fold desc = "App Start up">
     implementation(libs.androidx.app.startup)
+    //</editor-fold>
+
+    //<editor-fold desc = "Work Manager">
+    implementation(libs.work.manager)
     //</editor-fold>
 }

@@ -5,8 +5,12 @@ import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.remoteConfig
 import com.johny.mediaverse.core.data.networking.HttpClientFactory
 import com.johny.mediaverse.core.data.pref.PreferenceManager
+import com.johny.mediaverse.core.data.utils.ConnectivityObserverImp
+import com.johny.mediaverse.core.domain.utils.ConnectivityObserver
 import io.ktor.client.engine.cio.CIO
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val appModule = module {
@@ -20,4 +24,7 @@ val appModule = module {
 
     //remote config
     single { Firebase.remoteConfig }
+
+    //connectivity manager
+    singleOf(::ConnectivityObserverImp).bind<ConnectivityObserver>()
 }

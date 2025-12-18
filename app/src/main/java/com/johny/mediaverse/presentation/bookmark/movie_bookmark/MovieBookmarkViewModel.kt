@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.johny.mediaverse.data.local.model.movie.MovieEntity
+import com.johny.mediaverse.data.mapper.toMovieEntity
+import com.johny.mediaverse.domain.model.movie.MovieModel
 import com.johny.mediaverse.domain.repository.BookmarkRepository
 import com.johny.mediaverse.presentation.bookmark.movie_bookmark.MovieBookmarkEffect.*
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +28,8 @@ class MovieBookmarkViewModel(
     fun onIntent(intent: MovieBookmarkIntent)=viewModelScope.launch{
         when(intent){
             is MovieBookmarkIntent.OnMovieBookRemoveIntent ->{
-                removeMovieBookmark(intent.movieId)
+                removeMovieBookmark(intent.movieModel.id)
+                effect.emit(ShowMessageEffect(intent.movieModel))
             }
             is MovieBookmarkIntent.OnMovieBookmarkClickIntent ->{
                 effect.emit(OnNavigateToMovieDetailEffect(intent.movieId))
@@ -35,10 +38,18 @@ class MovieBookmarkViewModel(
             MovieBookmarkIntent.OnNavigateToMovie -> {
                 effect.emit(MovieScreenNavigationEffect)
             }
+
+            is MovieBookmarkIntent.ONMovieBookmarkUndoIntent -> {
+                undoBookmark(intent.movieModel)
+            }
         }
     }
 
     private fun removeMovieBookmark(movieId: Int)=viewModelScope.launch(Dispatchers.IO){
         repository.removeMovieBookmark(movieId)
+    }
+
+    private fun undoBookmark(movieModel: MovieModel) = viewModelScope.launch(Dispatchers.IO) {
+        repository.undoMovie(movieModel.toMovieEntity())
     }
 }

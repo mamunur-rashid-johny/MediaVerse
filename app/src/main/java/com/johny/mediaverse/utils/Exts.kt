@@ -1,6 +1,13 @@
 package com.johny.mediaverse.utils
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
+import android.provider.Settings
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.text.style.URLSpan
@@ -32,6 +39,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
+
 
 /**
  * Converts a millisecond timestamp (Long) into a locale-sensitive, long-format date string.
@@ -209,4 +217,30 @@ fun String.parseHtml(
             }
         }
     }
+}
+
+
+@SuppressLint("ObsoleteSdkInt")
+@Suppress("DEPRECATION")
+fun Context.checkInternet(): Boolean {
+    val manager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val network = manager.activeNetwork ?: return false
+        val activeNetwork = manager.getNetworkCapabilities(network) ?: return false
+        return when {
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            else -> false
+        }
+    } else {
+        val networkInfo = manager.activeNetworkInfo ?: return false
+        return networkInfo.isConnected
+    }
+}
+
+fun Context.openConnectivitySettings() {
+    try {
+        val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
+        this.startActivity(intent)
+    } catch (_: Exception) { }
 }

@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.johny.mediaverse.data.local.model.podcast.PodcastEntity
+import com.johny.mediaverse.data.mapper.toPodcastEntity
+import com.johny.mediaverse.domain.model.podcast.Podcast
 import com.johny.mediaverse.domain.repository.BookmarkRepository
 import com.johny.mediaverse.presentation.bookmark.podcast_bookmark.PodcastBookmarkEffect.*
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +28,8 @@ class PodcastBookmarkViewModel(
     fun onIntent(intent: PodcastBookmarkIntent) = viewModelScope.launch {
         when (intent) {
             is PodcastBookmarkIntent.OnPodcastBookRemoveIntent ->{
-                removeBookmark(intent.podcastId)
+                removeBookmark(intent.podcast)
+                effect.emit(ShowMessageEffect(intent.podcast))
             }
             is PodcastBookmarkIntent.OnPodcastBookmarkClickIntent ->{
                 effect.emit(OnNavigateToPodcastDetailEffect(intent.podcast))
@@ -35,10 +38,18 @@ class PodcastBookmarkViewModel(
             PodcastBookmarkIntent.OnNavigateToPodcast -> {
                 effect.emit(PodcastScreenNavigationEffect)
             }
+
+            is PodcastBookmarkIntent.UndoPodcastIntent -> {
+                undoBookmark(intent.podcast)
+            }
         }
     }
 
-    private fun removeBookmark(podcastId: String) = viewModelScope.launch(Dispatchers.IO) {
-        repository.removePodcastBookmark(podcastId)
+    private fun removeBookmark(podcast: Podcast) = viewModelScope.launch(Dispatchers.IO) {
+        repository.removePodcastBookmark(podcast.id)
+    }
+
+    private fun undoBookmark(podcast: Podcast) = viewModelScope.launch(Dispatchers.IO) {
+        repository.undoPodcast(podcast.toPodcastEntity())
     }
 }

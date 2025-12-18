@@ -6,4 +6,5 @@ sealed interface PodcastIntent {
     data class OnItemClick(val podcast: Podcast) : PodcastIntent
     data class OnAddBookMark(val podcast: Podcast) : PodcastIntent
     data class OnRemoveBookmark(val podcastId: String) : PodcastIntent
+    data object RetryPagination: PodcastIntent
 }

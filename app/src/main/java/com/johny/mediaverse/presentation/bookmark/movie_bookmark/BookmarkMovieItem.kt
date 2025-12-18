@@ -1,4 +1,4 @@
-package com.johny.mediaverse.presentation.movie.components
+package com.johny.mediaverse.presentation.bookmark.movie_bookmark
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,24 +39,27 @@ import com.johny.mediaverse.R
 import com.johny.mediaverse.core.utils.Constants
 import com.johny.mediaverse.domain.config.PosterSize
 import com.johny.mediaverse.domain.model.movie.MovieModel
-import com.johny.mediaverse.presentation.movie.MovieIntent
 import com.johny.mediaverse.presentation.movie.model.MovieModelUi
 import com.johny.mediaverse.presentation.ui.theme.MediaVerseTheme
 import com.johny.mediaverse.utils.shimmerEffect
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 
+/**
+ * Created by Johny on 18/12/25.
+ * Copyright (c) 2025 Pathao Ltd. All rights reserved.
+ */
 
 @Composable
-fun MovieGridItem(
+fun BookmarkMovieItem(
     modifier: Modifier = Modifier,
     movieUi: MovieModelUi,
-    onIntent: (MovieIntent) -> Unit
+    onIntent: (MovieBookmarkIntent) -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onIntent(MovieIntent.OnMovieDetailsNavigateIntent(movieUi.movie.id)) }
+            .clickable { onIntent(MovieBookmarkIntent.OnMovieBookmarkClickIntent(movieUi.movie.id)) }
     ) {
         Box(
             modifier = Modifier
@@ -98,11 +101,7 @@ fun MovieGridItem(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
                         onClick = {
-                           val intent =  if (movieUi.isBookmark) {
-                               MovieIntent.RemoveBookmarkIntent(movieUi.movie.id)
-                            } else {
-                               MovieIntent.SaveBookmarkIntent(movieUi.movie)
-                            }
+                            val intent = MovieBookmarkIntent.OnMovieBookRemoveIntent(movieUi.movie)
                             onIntent(intent)
                         }
                     ),
@@ -182,7 +181,7 @@ private fun MovieGridPreview() {
             ),
             isBookmark = false
         )
-        MovieGridItem(
+        BookmarkMovieItem(
             movieUi = dummy
         ) { }
     }

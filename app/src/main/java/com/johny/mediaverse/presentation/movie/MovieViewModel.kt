@@ -13,12 +13,11 @@ import com.johny.mediaverse.domain.model.movie.MovieModel
 import com.johny.mediaverse.domain.repository.MovieRepository
 import com.johny.mediaverse.presentation.movie.MovieSideEffect.NavigateToDetails
 import com.johny.mediaverse.presentation.movie.MovieSideEffect.NavigateToOnboarding
-import com.johny.mediaverse.presentation.movie.MovieSideEffect.ShowError
 import com.johny.mediaverse.presentation.movie.model.MovieModelUi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -43,28 +42,31 @@ class MovieViewModel(
             }
         }.cachedIn(viewModelScope)
 
-    private val _effect = MutableSharedFlow<MovieSideEffect>()
-    val effect = _effect.asSharedFlow()
+    val effect: SharedFlow<MovieSideEffect>
+        field = MutableSharedFlow<MovieSideEffect>()
+
 
     fun onIntent(movieIntent: MovieIntent) = viewModelScope.launch {
         when (movieIntent) {
             MovieIntent.LogoutIntent -> {
                 preferenceManager.remove(Constants.PreferenceKeys.SHOW_ONBOARDING)
-                _effect.emit(NavigateToOnboarding)
+                effect.emit(NavigateToOnboarding)
             }
 
             is MovieIntent.OnMovieDetailsNavigateIntent -> {
-                _effect.emit(NavigateToDetails(movieIntent.movieId))
+                effect.emit(NavigateToDetails(movieIntent.movieId))
             }
+
             is MovieIntent.RemoveBookmarkIntent -> {
                 removeBookmark(movieIntent.movieId)
             }
+
             is MovieIntent.SaveBookmarkIntent -> {
                 saveBookmark(movieIntent.movie)
             }
 
-            is MovieIntent.ShowErrorIntent -> {
-                _effect.emit(ShowError(movieIntent.message,movieIntent.actionLabel))
+            MovieIntent.OnRetryPagination -> {
+                effect.emit(MovieSideEffect.RetryPaginationEffect)
             }
         }
     }
@@ -73,7 +75,7 @@ class MovieViewModel(
         repository.saveBookmark(movieModel.toMovieEntity())
     }
 
-    private fun removeBookmark(movieId: Int)=viewModelScope.launch(Dispatchers.IO){
+    private fun removeBookmark(movieId: Int) = viewModelScope.launch(Dispatchers.IO) {
         repository.removeBookmark(movieId)
     }
 }

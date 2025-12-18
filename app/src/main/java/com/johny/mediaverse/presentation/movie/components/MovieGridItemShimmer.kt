@@ -1,4 +1,4 @@
-package com.johny.mediaverse.presentation.tv_show.components
+package com.johny.mediaverse.presentation.movie.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -22,9 +22,8 @@ import androidx.compose.ui.unit.dp
 import com.johny.mediaverse.presentation.ui.theme.MediaVerseTheme
 import com.johny.mediaverse.utils.shimmerEffect
 
-
 @Composable
-fun TvShowItemGridShimmer(
+fun MovieGridItemShimmer(
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -60,9 +59,9 @@ fun TvShowItemGridShimmer(
         ) {
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
                     .fillMaxWidth()
                     .height(20.dp)
+                    .clip(RoundedCornerShape(5.dp))
                     .shimmerEffect()
             )
 
@@ -70,9 +69,9 @@ fun TvShowItemGridShimmer(
 
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(6.dp))
                     .fillMaxWidth()
                     .height(15.dp)
+                    .clip(RoundedCornerShape(5.dp))
                     .shimmerEffect()
             )
         }
@@ -81,8 +80,8 @@ fun TvShowItemGridShimmer(
 
 @Preview
 @Composable
-private fun TvShowItemGridShimmerPreview() {
+private fun MovieGridItemShimmerPreview() {
     MediaVerseTheme {
-        TvShowItemGridShimmer()
+        MovieGridItemShimmer()
     }
 }

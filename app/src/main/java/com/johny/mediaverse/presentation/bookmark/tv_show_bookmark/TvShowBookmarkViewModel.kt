@@ -3,6 +3,8 @@ package com.johny.mediaverse.presentation.bookmark.tv_show_bookmark
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.johny.mediaverse.data.mapper.toMovieEntity
+import com.johny.mediaverse.domain.model.tv_show.TvShowModel
 import com.johny.mediaverse.domain.repository.BookmarkRepository
 import com.johny.mediaverse.presentation.bookmark.tv_show_bookmark.TvShowBookmarkEffect.*
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +24,8 @@ class TvShowBookmarkViewModel(
     fun onIntent(intent: TvShowBookmarkIntent) = viewModelScope.launch {
         when (intent) {
             is TvShowBookmarkIntent.OnTvShowBookRemoveIntent -> {
-                removeTvShowBookmark(intent.tvShowId)
+                removeTvShowBookmark(intent.tvShowModel)
+                effect.emit(ShowMessageEffect(intent.tvShowModel))
             }
 
             is TvShowBookmarkIntent.OnTvShowBookmarkClickIntent -> {
@@ -32,10 +35,17 @@ class TvShowBookmarkViewModel(
             TvShowBookmarkIntent.OnNavigateToTvShow -> {
                 effect.emit(TvShowScreenNavigationEffect)
             }
+
+            is TvShowBookmarkIntent.UndoTvShowIntent -> {
+                undoBookmark(intent.tvShowModel)
+            }
         }
     }
 
-    private fun removeTvShowBookmark(tvShowId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        repository.removeTvShowBookmark(tvShowId)
+    private fun removeTvShowBookmark(tvShowModel: TvShowModel) = viewModelScope.launch(Dispatchers.IO) {
+        repository.removeTvShowBookmark(tvShowModel.id)
+    }
+    private fun undoBookmark(tvShowModel:TvShowModel)=viewModelScope.launch(Dispatchers.IO){
+        repository.undoTvShow(tvShowModel.toMovieEntity())
     }
 }
