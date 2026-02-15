@@ -27,7 +27,7 @@ class MovieDbApiImp(
     override suspend fun getMoviePaged(page: Int): Result<MovieResponseDto, NetworkError> {
         return safeCall<MovieResponseDto> {
             httpClient.get(
-                urlString = Constants.MovieDbUrl.MOVIE_DB_BASE_URL+Constants.MovieDbUrl.DISCOVER_MOVIE
+                urlString = BuildConfig.MOVIE_DB_BASE_URL+Constants.MovieDbUrl.DISCOVER_MOVIE
             ){
                 headers.append(HttpHeaders.Authorization,"Bearer ${BuildConfig.MOVIE_DB_ACCESS_TOKEN}")
                 headers.append(HttpHeaders.Accept, "application/json")

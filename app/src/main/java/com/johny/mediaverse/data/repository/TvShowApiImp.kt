@@ -23,18 +23,21 @@ import io.ktor.http.HttpHeaders
 
 class TvShowApiImp(
     private val httpClient: HttpClient
-): TvShowApi {
+) : TvShowApi {
     override suspend fun getPagedTvShow(page: Int): Result<TvShowResponseDto, NetworkError> {
         return safeCall<TvShowResponseDto> {
             httpClient.get(
-                urlString = Constants.MovieDbUrl.MOVIE_DB_BASE_URL+Constants.MovieDbUrl.DISCOVER_TV_SHOW
-            ){
-                headers.append(HttpHeaders.Authorization,"Bearer ${BuildConfig.MOVIE_DB_ACCESS_TOKEN}")
+                urlString = BuildConfig.MOVIE_DB_BASE_URL + Constants.MovieDbUrl.DISCOVER_TV_SHOW
+            ) {
+                headers.append(
+                    HttpHeaders.Authorization,
+                    "Bearer ${BuildConfig.MOVIE_DB_ACCESS_TOKEN}"
+                )
                 headers.append(HttpHeaders.Accept, "application/json")
-                parameter(INCLUDE_ADULT,"$INCLUDE_ADULT_VALUE")
-                parameter(INCLUDE_NULL_FIRST_AIR_DATES,"$INCLUDE_NULL_FIRST_AIR_DATES_VALUES")
+                parameter(INCLUDE_ADULT, "$INCLUDE_ADULT_VALUE")
+                parameter(INCLUDE_NULL_FIRST_AIR_DATES, "$INCLUDE_NULL_FIRST_AIR_DATES_VALUES")
                 parameter(LANGUAGE, LANGUAGE_VALUE)
-                parameter(PAGE,"$page")
+                parameter(PAGE, "$page")
                 parameter(SORT_BY, SORT_BY_VALUE)
             }
         }

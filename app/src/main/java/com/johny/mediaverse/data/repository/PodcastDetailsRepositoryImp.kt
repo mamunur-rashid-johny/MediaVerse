@@ -19,7 +19,7 @@ class PodcastDetailsRepositoryImp(
     override suspend fun getPodcastDetails(podcastId: String): Result<PodcastDetails, NetworkError> {
         return safeCall<PodcastDetailsDto> {
             httpClient.get(
-                urlString = "${Constants.ListenNoteUrls.LISTEN_NOTE_BASE_URL}${Constants.ListenNoteUrls.PODCAST_DETAILS}$podcastId"
+                urlString = "${BuildConfig.LISTEN_NOTE_BASE_URL}${Constants.ListenNoteUrls.PODCAST_DETAILS}$podcastId"
             ) {
                 headers.append("App","MediaVerse")
                 headers.append("X-ListenAPI-Key", BuildConfig.LISTEN_NOTE_API_KEY)

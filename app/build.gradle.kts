@@ -42,9 +42,13 @@ android {
         val movieDbApiKey = properties.getProperty("MOVIE_DB_API_KEY", "")
         val movieDbAccessToken = properties.getProperty("MOVIE_DB_ACCESS_TOKEN", "")
         val listenNoteApiKey = properties.getProperty("LISTEN_NOTE_API_KEY", "")
+        val movieDbBaseUrl = properties.getProperty("MOVIE_DB_BASE_URL","")
+        val listenNoteBaseUrl = properties.getProperty("LISTEN_NOTE_BASE_URL","")
         buildConfigField("String", "MOVIE_DB_API_KEY", "\"$movieDbApiKey\"")
         buildConfigField("String", "MOVIE_DB_ACCESS_TOKEN", "\"$movieDbAccessToken\"")
         buildConfigField("String", "LISTEN_NOTE_API_KEY", "\"$listenNoteApiKey\"")
+        buildConfigField("String", "MOVIE_DB_BASE_URL", "\"$movieDbBaseUrl\"")
+        buildConfigField("String", "LISTEN_NOTE_BASE_URL", "\"$listenNoteBaseUrl\"")
     }
 
     buildTypes {
@@ -82,6 +86,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
+    implementation(libs.androidx.compose.ui.graphics)
     debugImplementation(libs.bundles.compose.debug)
     //</editor-fold>
 

@@ -7,7 +7,6 @@ object Constants {
     }
 
     object ListenNoteUrls{
-        const val LISTEN_NOTE_BASE_URL = "https://listen-api.listennotes.com/api/v2/"
         const val BEST_PODCASTS = "best_podcasts"
         const val PODCAST_DETAILS = "podcasts/"
     }
@@ -19,15 +18,15 @@ object Constants {
     }
 
     object MovieDbUrl{
-        const val MOVIE_DB_BASE_URL = "https://api.themoviedb.org/3/"
         const val DISCOVER_MOVIE = "discover/movie"
         const val DISCOVER_TV_SHOW = "discover/tv"
+        const val MOVIE_DETAILS = "movie/"
         const val IMAGE_ROOT_PATH ="https://image.tmdb.org/t/p/"
     }
 
     object ApiQueryParam{
         const val INCLUDE_ADULT = "include_adult"
-        const val INCLUDE_ADULT_VALUE = true
+        const val INCLUDE_ADULT_VALUE = false
         const val INCLUDE_VIDEO = "include_video"
         const val INCLUDE_VIDEO_VALUE = false
         const val LANGUAGE = "language"

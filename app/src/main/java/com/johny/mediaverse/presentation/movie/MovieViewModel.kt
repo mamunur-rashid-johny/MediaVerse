@@ -1,5 +1,6 @@
 package com.johny.mediaverse.presentation.movie
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -25,7 +26,7 @@ import kotlinx.coroutines.launch
 class MovieViewModel(
     private val preferenceManager: PreferenceManager,
     private val repository: MovieRepository,
-    private val remoteConfigDataSource: RemoteConfigDataSource
+    remoteConfig: RemoteConfigDataSource
 ) : ViewModel() {
 
     val moviesFlow: Flow<PagingData<MovieModel>> = repository.getMovies().cachedIn(viewModelScope)
@@ -77,5 +78,9 @@ class MovieViewModel(
 
     private fun removeBookmark(movieId: Int) = viewModelScope.launch(Dispatchers.IO) {
         repository.removeBookmark(movieId)
+    }
+
+    init {
+        Log.d("RemoteConfig", "${remoteConfig.isAppInactive()} == ${remoteConfig.showInfoFloatingButton()}==${remoteConfig.showSearchIcon()}")
     }
 }

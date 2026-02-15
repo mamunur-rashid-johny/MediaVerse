@@ -31,4 +31,5 @@ val viewModelModule = module {
     viewModelOf(::TvShowViewModel)
     viewModelOf(::TvShowBookmarkViewModel)
     viewModelOf(::TvShowDetailsViewModel)
+    viewModelOf(::MovieDetailsViewModel)
 }

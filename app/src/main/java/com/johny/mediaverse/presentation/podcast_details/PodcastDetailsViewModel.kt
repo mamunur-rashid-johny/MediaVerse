@@ -18,7 +18,7 @@ import com.johny.mediaverse.presentation.podcast_details.PodcastDetailsEffect.On
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.reflect.typeOf
@@ -35,8 +35,8 @@ class PodcastDetailsViewModel(
     var state = MutableStateFlow(PodcastDetailsState())
         private set
 
-    private val _effect = MutableSharedFlow<PodcastDetailsEffect>()
-    val effect = _effect.asSharedFlow()
+    val effect: SharedFlow<PodcastDetailsEffect>
+        field = MutableSharedFlow<PodcastDetailsEffect>()
 
     private fun getPodcastDetails() = viewModelScope.launch(Dispatchers.IO) {
         state.update {
@@ -64,15 +64,15 @@ class PodcastDetailsViewModel(
     fun onIntent(intent: PodcastDetailsIntent) = viewModelScope.launch {
         when (intent) {
             is PodcastDetailsIntent.OnAudioPlayIntent -> {
-                _effect.emit(NavigateToAudioPlayer(intent.episodeModel))
+                effect.emit(NavigateToAudioPlayer(intent.episodeModel))
             }
 
             PodcastDetailsIntent.OnBackPressed -> {
-                _effect.emit(OnBackPressed)
+                effect.emit(OnBackPressed)
             }
 
             is PodcastDetailsIntent.NavigateToWebviewIntent -> {
-                _effect.emit(
+                effect.emit(
                     PodcastDetailsEffect.NavigateToWebviewEffect(
                         url = intent.url,
                         title = intent.title

@@ -30,7 +30,7 @@ internal fun OnBoardRoute(navController: NavController) {
 
     OnBoardScreen(
         modifier = Modifier.fillMaxSize(),
-        onBoardState = state,
+        state = state,
         onBoardEvent = viewModel::onIntent
     )
 

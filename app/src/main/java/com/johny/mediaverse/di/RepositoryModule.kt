@@ -5,6 +5,7 @@ import com.johny.mediaverse.core.startup.RemoteConfigDataSourceImp
 import com.johny.mediaverse.data.repository.BookmarkRepositoryImp
 import com.johny.mediaverse.data.repository.ListenNoteApiImp
 import com.johny.mediaverse.data.repository.MovieDbApiImp
+import com.johny.mediaverse.data.repository.MovieDetailsRepositoryImp
 import com.johny.mediaverse.data.repository.MovieRepositoryImp
 import com.johny.mediaverse.data.repository.PodcastDetailsRepositoryImp
 import com.johny.mediaverse.data.repository.PodcastRepositoryImp
@@ -13,6 +14,7 @@ import com.johny.mediaverse.data.repository.TvShowRepositoryImp
 import com.johny.mediaverse.domain.repository.BookmarkRepository
 import com.johny.mediaverse.domain.repository.ListenNoteApi
 import com.johny.mediaverse.domain.repository.MovieDbApi
+import com.johny.mediaverse.domain.repository.MovieDetailsRepository
 import com.johny.mediaverse.domain.repository.MovieRepository
 import com.johny.mediaverse.domain.repository.PodcastDetailRepository
 import com.johny.mediaverse.domain.repository.PodcastRepository
@@ -32,4 +34,5 @@ val repositoryModule = module {
     singleOf(::TvShowApiImp).bind<TvShowApi>()
     singleOf(::TvShowRepositoryImp).bind<TvShowRepository>()
     singleOf(::RemoteConfigDataSourceImp).bind<RemoteConfigDataSource>()
+    singleOf(::MovieDetailsRepositoryImp).bind<MovieDetailsRepository>()
 }

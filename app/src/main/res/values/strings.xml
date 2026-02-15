@@ -12,4 +12,11 @@
     <string name="play_latest_episode">Play Latest Episode</string>
     <string name="visit_website">Visit Website</string>
     <string name="recent_episodes">Recent Episodes</string>
+    <string name="movie_on_board_title">Discover Movies</string>
+    <string name="movie_on_board_description">Find popular, trending, and classic films to watch.</string>
+    <string name="tv_show_on_board_title">Explore TV Shows</string>
+    <string name="tv_show_on_board_description">Track series, seasons, and shows worth binging.</string>
+    <string name="podcast_on_board_title">Listen to Podcasts</string>
+    <string name="podcast_on_board_description">Discover podcasts across every genre and topic.</string>
+    <string name="media_notification_channel">Media Playback</string>
 </resources>

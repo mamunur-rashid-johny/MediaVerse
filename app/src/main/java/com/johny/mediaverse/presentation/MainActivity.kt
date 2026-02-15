@@ -1,6 +1,5 @@
 package com.johny.mediaverse.presentation
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -29,7 +27,6 @@ import com.johny.mediaverse.core.navigation.Destination
 import com.johny.mediaverse.core.navigation.MediaVerseApp
 import com.johny.mediaverse.core.presentation.components.ConnectivityBanner
 import com.johny.mediaverse.core.presentation.utils.ObserveAsEvent
-import com.johny.mediaverse.core.service.MediaVerseService
 import com.johny.mediaverse.core.utils.SnackbarController
 import com.johny.mediaverse.presentation.ui.theme.MediaVerseTheme
 import kotlinx.coroutines.launch
@@ -39,7 +36,6 @@ class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startService()
         installSplashScreen().setKeepOnScreenCondition {
             viewModel.isLoading
         }
@@ -53,11 +49,6 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
-    }
-
-    private fun startService() {
-        val intent = Intent(this, MediaVerseService::class.java)
-        startService(intent)
     }
 }
 

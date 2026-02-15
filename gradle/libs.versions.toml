@@ -29,6 +29,7 @@ firebase-bom = "34.6.0"
 startup = "1.2.0"
 firebaseAppcheckDebug = "19.0.1"
 work-manager = "2.9.0"
+uiGraphics = "1.10.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -106,6 +107,7 @@ androidx-app-startup = { group = "androidx.startup", name = "startup-runtime", v
 
 #work manager
 work-manager = {module="androidx.work:work-runtime-ktx",version.ref="work-manager"}
+androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

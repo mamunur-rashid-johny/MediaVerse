@@ -44,7 +44,7 @@ import java.util.Locale
 /**
  * Converts a millisecond timestamp (Long) into a locale-sensitive, long-format date string.
  *
- * It uses the modern java.time API (JSR 310) which is safe, thread-safe, and locale-aware
+ * It uses the modern java. Time API (JSR 310) which is safe, thread-safe, and locale-aware
  * (available via API desugaring on all Android versions).
  *
  * @return The formatted date string (e.g., "May 12, 2018") or null if an error occurs.
@@ -79,7 +79,7 @@ enum class DateFormat(val format: String) {
 // .     = The dot separator you requested
 // mm    = Minute (00)
 // a     = AM/PM marker
-* @return format of time mils to May 12, 2018 at 11.00 AM
+* @return format of time mils to May 12, 2018, at 11.00 AM
 * */
 fun Long.toDateFormatString(dateFormat: DateFormat): String {
     return try {

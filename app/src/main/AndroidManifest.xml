@@ -31,6 +31,7 @@
         <service
             android:name=".core.service.MediaVerseService"
             android:exported="true"
+            android:enabled="true"
             android:foregroundServiceType="mediaPlayback">
             <intent-filter>
                 <action android:name="androidx.media3.session.MediaSessionService" />
@@ -55,6 +56,13 @@
                 android:value="@string/androidx_startup"
                 tools:node="remove" />
         </provider>
+        <meta-data
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="com.google.android.exoplayer2.ui.PlayerNotificationManager" />
+
+        <meta-data
+            android:name="androidx.media3.session.DefaultMediaNotificationProvider.DEFAULT_NOTIFICATION_ICON"
+            android:resource="@drawable/ic_launcher_foreground" />
     </application>
 
 </manifest>

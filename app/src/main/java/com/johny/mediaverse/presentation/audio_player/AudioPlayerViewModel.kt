@@ -11,9 +11,9 @@ import com.johny.mediaverse.core.navigation.Destination
 import com.johny.mediaverse.core.utils.serializableType
 import com.johny.mediaverse.domain.model.podcast_details.EpisodeModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -27,8 +27,8 @@ class AudioPlayerViewModel(
     var state = MutableStateFlow(AudioPlayerState())
         private set
 
-    private val _effect = MutableSharedFlow<AudioPlayerEffect>()
-    val effect = _effect.asSharedFlow()
+    private val _effect = Channel<AudioPlayerEffect>(Channel.BUFFERED)
+    val effect = _effect.receiveAsFlow()
 
     init {
 
@@ -36,6 +36,7 @@ class AudioPlayerViewModel(
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 state.update { it.copy(isPlaying = isPlaying) }
             }
+
 
             override fun onPlaybackStateChanged(playbackState: Int) {
                 when(playbackState){
@@ -71,10 +72,11 @@ class AudioPlayerViewModel(
         startProgressUpdateLoop()
     }
 
-    fun onIntent(intent: AudioPlayerIntent) {
+    fun onIntent(intent: AudioPlayerIntent)=viewModelScope.launch {
         when (intent) {
             is AudioPlayerIntent.OnPlayPauseToggle -> {
                 if (player.isPlaying) player.pause() else player.play()
+                _effect.send(AudioPlayerEffect.StartService)
             }
 
             is AudioPlayerIntent.OnSeek -> {
@@ -92,7 +94,7 @@ class AudioPlayerViewModel(
 
             is AudioPlayerIntent.OnBackPressed -> {
                 player.stop()
-                viewModelScope.launch { _effect.emit(AudioPlayerEffect.OnBack) }
+                _effect.send(AudioPlayerEffect.OnBack)
             }
         }
     }
@@ -119,6 +121,10 @@ class AudioPlayerViewModel(
         player.setMediaItem(mediaItem)
         player.prepare()
         player.play()
+
+        viewModelScope.launch {
+            _effect.send(AudioPlayerEffect.StartService)
+        }
     }
 
     private fun startProgressUpdateLoop() {
@@ -140,6 +146,7 @@ class AudioPlayerViewModel(
 
     override fun onCleared() {
         super.onCleared()
+        _effect.close()
         player.release()
     }
 }

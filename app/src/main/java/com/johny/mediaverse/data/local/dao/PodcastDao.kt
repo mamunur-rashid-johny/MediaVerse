@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PodcastDao {
 
-    @Query("SELECT * FROM podcast")
+    @Query("SELECT * FROM podcast ORDER BY savedAt DESC")
     fun getPagedPodcast(): PagingSource<Int, PodcastEntity>
 
     @Query("SELECT id FROM podcast")

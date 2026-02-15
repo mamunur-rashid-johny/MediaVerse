@@ -17,7 +17,7 @@ class ListenNoteApiImp(
     override suspend fun getPodcastsPaged(page: Int): Result<PodcastResponseDto, NetworkError> {
         return safeCall<PodcastResponseDto> {
             httpClient.get(
-                urlString = Constants.ListenNoteUrls.LISTEN_NOTE_BASE_URL + Constants.ListenNoteUrls.BEST_PODCASTS
+                urlString = BuildConfig.LISTEN_NOTE_BASE_URL + Constants.ListenNoteUrls.BEST_PODCASTS
             ){
                 headers.append("App","MediaVerse")
                 headers.append("X-ListenAPI-Key", BuildConfig.LISTEN_NOTE_API_KEY)

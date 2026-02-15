@@ -33,9 +33,7 @@ fun BookmarkScreen(
     val colors = listOf(Color(0xFFE53E3E), Color(0xFF3182CE), Color(0xFF38A169))
     Column {
         PrimaryTabRow(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+            modifier = modifier.fillMaxWidth().padding(8.dp),
             selectedTabIndex = state.selectedTabIndex,
             containerColor = Color.Transparent,
             contentColor = Color(0xFF2D3748),
@@ -68,7 +66,7 @@ fun BookmarkScreen(
                             fontWeight = if (state.selectedTabIndex == index) FontWeight.Bold else FontWeight.Medium,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
                         )
                     },
                     selectedContentColor = colors[index],

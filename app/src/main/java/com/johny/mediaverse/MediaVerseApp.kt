@@ -1,7 +1,10 @@
 package com.johny.mediaverse
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.pm.ApplicationInfo
+import android.os.Build
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy.Builder
 import com.johny.mediaverse.di.appModule
@@ -16,6 +19,7 @@ class MediaVerseApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        createNotificationChannel()
         setStrictModePolicy()
         startKoin {
             androidLogger()
@@ -33,6 +37,20 @@ class MediaVerseApp : Application() {
             StrictMode.setThreadPolicy(
                 Builder().detectAll().penaltyLog().build(),
             )
+        }
+    }
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "default_channel_id"
+            val channelName = "Media Playback"
+            val importance = NotificationManager.IMPORTANCE_LOW
+
+            val channel = NotificationChannel(channelId, channelName, importance).apply {
+                description = "Controls for media playback"
+            }
+
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(channel)
         }
     }
 }
