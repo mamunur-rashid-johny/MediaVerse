@@ -76,7 +76,6 @@ class AudioPlayerViewModel(
         when (intent) {
             is AudioPlayerIntent.OnPlayPauseToggle -> {
                 if (player.isPlaying) player.pause() else player.play()
-                _effect.send(AudioPlayerEffect.StartService)
             }
 
             is AudioPlayerIntent.OnSeek -> {
