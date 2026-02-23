@@ -2,6 +2,7 @@ package com.johny.mediaverse.core.navigation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.ui.graphics.Color
 import com.johny.mediaverse.R
 import com.johny.mediaverse.domain.model.podcast.Podcast
 import com.johny.mediaverse.domain.model.podcast_details.EpisodeModel
@@ -53,12 +54,14 @@ sealed class BottomNavItem(
     @param:StringRes val title: Int,
     @param:DrawableRes val iconSelected: Int,
     @param:DrawableRes val iconUnselected: Int,
+    val color: Color,
     val route: Destination
 ) {
     data object Movie : BottomNavItem(
         R.string.movie,
         R.drawable.movie_selected,
         R.drawable.movie,
+        color = Color(0xFFFFA574),
         Destination.MovieRoute
     )
 
@@ -66,6 +69,7 @@ sealed class BottomNavItem(
         R.string.tv_show,
         R.drawable.tv_show_selected,
         R.drawable.tv_show,
+        color = Color(0xFFFA6FFF) ,
         Destination.TvShowRoute
     )
 
@@ -73,6 +77,7 @@ sealed class BottomNavItem(
         R.string.podcast,
         R.drawable.podcast_selected,
         R.drawable.podcast,
+        color = Color(0xFFADFF64),
         Destination.PodcastRoute
     )
 
@@ -80,6 +85,7 @@ sealed class BottomNavItem(
         R.string.bookmark,
         R.drawable.bookmark_selected,
         R.drawable.bookmark,
+        color = Color(0xFF009688),
         Destination.BookmarkRoute
     )
 }

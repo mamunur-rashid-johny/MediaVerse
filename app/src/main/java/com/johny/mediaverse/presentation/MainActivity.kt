@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -29,6 +30,9 @@ import com.johny.mediaverse.core.presentation.components.ConnectivityBanner
 import com.johny.mediaverse.core.presentation.utils.ObserveAsEvent
 import com.johny.mediaverse.core.utils.SnackbarController
 import com.johny.mediaverse.presentation.ui.theme.MediaVerseTheme
+import dev.chrisbanes.haze.HazeDefaults
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.haze
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -88,6 +92,7 @@ fun App(
         )
     }
     val bottomBarState = currentRoute in bottomBarRoutes
+    val hazeState = remember { HazeState() }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -107,6 +112,10 @@ fun App(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .haze(
+                    state = hazeState,
+                    style = HazeDefaults.style(backgroundColor = MaterialTheme.colorScheme.surface)
+                )
         ) {
             MediaVerseApp(
                 navController = navController,
@@ -117,7 +126,7 @@ fun App(
                 isConnected = isConnected,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(horizontal = 16.dp, vertical = 10.dp)
+                    .padding(start = 10.dp, end = 10.dp)
             )
         }
     }

@@ -21,6 +21,8 @@ object Constants {
         const val DISCOVER_MOVIE = "discover/movie"
         const val DISCOVER_TV_SHOW = "discover/tv"
         const val MOVIE_DETAILS = "movie/"
+        const val TV_DETAILS = "tv/"
+        const val TV_SEASON = "/season/"
         const val IMAGE_ROOT_PATH ="https://image.tmdb.org/t/p/"
     }
 

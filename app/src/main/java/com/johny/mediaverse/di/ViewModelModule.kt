@@ -12,6 +12,7 @@ import com.johny.mediaverse.presentation.podcast.PodcastViewModel
 import com.johny.mediaverse.presentation.podcast_details.PodcastDetailsViewModel
 import com.johny.mediaverse.presentation.tv_show.TvShowViewModel
 import com.johny.mediaverse.presentation.tv_show_details.TvShowDetailsViewModel
+import com.johny.mediaverse.presentation.tv_show_season_details.TvShowSeasonDetailsViewModel
 import com.johny.mediaverse.presentation.web_view.WebViewViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -32,4 +33,6 @@ val viewModelModule = module {
     viewModelOf(::TvShowBookmarkViewModel)
     viewModelOf(::TvShowDetailsViewModel)
     viewModelOf(::MovieDetailsViewModel)
+    viewModelOf(::TvShowDetailsViewModel)
+    viewModelOf(::TvShowSeasonDetailsViewModel)
 }

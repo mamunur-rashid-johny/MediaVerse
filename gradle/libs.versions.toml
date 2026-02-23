@@ -30,6 +30,7 @@ startup = "1.2.0"
 firebaseAppcheckDebug = "19.0.1"
 work-manager = "2.9.0"
 uiGraphics = "1.10.2"
+haze-glassmorphism = "0.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -108,6 +109,10 @@ androidx-app-startup = { group = "androidx.startup", name = "startup-runtime", v
 #work manager
 work-manager = {module="androidx.work:work-runtime-ktx",version.ref="work-manager"}
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
+
+#glassmorphism effect
+haze-glassmorphism = {module="dev.chrisbanes.haze:haze-jetpack-compose", version.ref="haze-glassmorphism"}
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

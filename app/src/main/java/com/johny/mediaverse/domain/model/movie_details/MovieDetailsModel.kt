@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MovieDetailsModel(
     val adult: Boolean,
-    val backdropPath: String,
+    val backdropPath: String?,
     val budget: Int,
     val genres: List<GenreModel>,
     val homepage: String,

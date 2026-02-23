@@ -12,8 +12,8 @@ plugins {
 
 //for extracting local properties variables
 val properties = Properties()
-val propertiesLocalFile = rootProject.file("local.properties")
-if (propertiesLocalFile.exists()) {
+val propertiesLocalFile: File? = rootProject.file("local.properties")
+if (propertiesLocalFile?.exists()==true) {
     properties.load(propertiesLocalFile.inputStream())
 }
 
@@ -157,5 +157,9 @@ dependencies {
 
     //<editor-fold desc = "Work Manager">
     implementation(libs.work.manager)
+    //</editor-fold>
+
+    //<editor-fold desc = "glassmorphism effect">
+    implementation(libs.haze.glassmorphism)
     //</editor-fold>
 }

@@ -9,7 +9,9 @@ import com.johny.mediaverse.data.repository.MovieDetailsRepositoryImp
 import com.johny.mediaverse.data.repository.MovieRepositoryImp
 import com.johny.mediaverse.data.repository.PodcastDetailsRepositoryImp
 import com.johny.mediaverse.data.repository.PodcastRepositoryImp
+import com.johny.mediaverse.data.repository.SeasonRepositoryImpl
 import com.johny.mediaverse.data.repository.TvShowApiImp
+import com.johny.mediaverse.data.repository.TvShowDetailsRepositoryImpl
 import com.johny.mediaverse.data.repository.TvShowRepositoryImp
 import com.johny.mediaverse.domain.repository.BookmarkRepository
 import com.johny.mediaverse.domain.repository.ListenNoteApi
@@ -18,7 +20,9 @@ import com.johny.mediaverse.domain.repository.MovieDetailsRepository
 import com.johny.mediaverse.domain.repository.MovieRepository
 import com.johny.mediaverse.domain.repository.PodcastDetailRepository
 import com.johny.mediaverse.domain.repository.PodcastRepository
+import com.johny.mediaverse.domain.repository.SeasonRepository
 import com.johny.mediaverse.domain.repository.TvShowApi
+import com.johny.mediaverse.domain.repository.TvShowDetailsRepository
 import com.johny.mediaverse.domain.repository.TvShowRepository
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -35,4 +39,6 @@ val repositoryModule = module {
     singleOf(::TvShowRepositoryImp).bind<TvShowRepository>()
     singleOf(::RemoteConfigDataSourceImp).bind<RemoteConfigDataSource>()
     singleOf(::MovieDetailsRepositoryImp).bind<MovieDetailsRepository>()
+    singleOf(::TvShowDetailsRepositoryImpl).bind<TvShowDetailsRepository>()
+    singleOf(::SeasonRepositoryImpl).bind<SeasonRepository>()
 }
