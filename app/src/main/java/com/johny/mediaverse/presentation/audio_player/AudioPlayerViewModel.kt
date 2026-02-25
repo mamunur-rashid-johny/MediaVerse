@@ -93,6 +93,8 @@ class AudioPlayerViewModel(
 
             is AudioPlayerIntent.OnBackPressed -> {
                 player.stop()
+                player.clearMediaItems()
+                _effect.send(AudioPlayerEffect.StopService)
                 _effect.send(AudioPlayerEffect.OnBack)
             }
         }

@@ -31,6 +31,9 @@ internal fun AudioPlayerRoute(navController: NavController) {
                     context.startService(intent)
                 }
             }
+            AudioPlayerEffect.StopService -> {
+                context.stopService(Intent(context, MediaVerseService::class.java))
+            }
         }
     }
 

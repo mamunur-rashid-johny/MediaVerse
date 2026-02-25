@@ -6,6 +6,8 @@ import android.app.PendingIntent
 import android.app.TaskStackBuilder
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -17,9 +19,13 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import androidx.media3.session.MediaStyleNotificationHelper
+import coil3.ImageLoader
+import coil3.request.ImageRequest
+import coil3.toBitmap
 import com.johny.mediaverse.R
 import com.johny.mediaverse.presentation.MainActivity
 import org.koin.android.ext.android.inject
+import java.util.Locale
 
 @UnstableApi
 class MediaVerseService : MediaSessionService() {
@@ -28,6 +34,8 @@ class MediaVerseService : MediaSessionService() {
     private var mediaSession: MediaSession? = null
     private val handler = Handler(Looper.getMainLooper())
     private var progressRunnable: Runnable? = null
+    private var artworkBitmap: Bitmap? = null
+    private var currentArtworkUri: Uri? = null
 
     companion object {
         private const val NOTIFICATION_ID = 1001
@@ -103,14 +111,37 @@ class MediaVerseService : MediaSessionService() {
         val minutes = (totalSeconds % 3600) / 60
         val seconds = totalSeconds % 60
         return if (hours > 0) {
-            String.format("%d:%02d:%02d", hours, minutes, seconds)
+            String.format(Locale.getDefault(),"%d:%02d:%02d", hours, minutes, seconds)
         } else {
-            String.format("%d:%02d", minutes, seconds)
+            String.format(Locale.getDefault(),"%d:%02d", minutes, seconds)
         }
+    }
+
+    private fun loadArtwork(uri: Uri) {
+        if (uri == currentArtworkUri) return
+        currentArtworkUri = uri
+
+        val request = ImageRequest.Builder(this)
+            .data(uri)
+            .size(512)
+            .target(
+                onSuccess = { drawable ->
+                    artworkBitmap = drawable.toBitmap()
+                    postMediaNotification()
+                },
+                onError = {
+                    artworkBitmap = null
+                }
+            )
+            .build()
+        ImageLoader(this).enqueue(request)
     }
 
     private fun postMediaNotification() {
         val session = mediaSession ?: return
+
+        // Load artwork if available and not yet cached
+        player.mediaMetadata.artworkUri?.let { loadArtwork(it) }
 
         val mediaStyle = MediaStyleNotificationHelper.MediaStyle(session)
             .setShowActionsInCompactView(0, 1, 2)
@@ -126,6 +157,7 @@ class MediaVerseService : MediaSessionService() {
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setLargeIcon(artworkBitmap)
             .setContentTitle(player.mediaMetadata.title ?: "MediaVerse")
             .setContentText(contentText)
             .setStyle(mediaStyle)
