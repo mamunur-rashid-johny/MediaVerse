@@ -41,7 +41,7 @@ fun EpisodeItem(
             .clickable(
                 onClick = { onClick(episodeModel) }
             )
-            .padding(horizontal = 8.dp, vertical = 16.dp)
+            .padding(vertical = 16.dp)
     ) {
         Text(
             text = episodeModel.title,

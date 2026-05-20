@@ -10,7 +10,7 @@ data class TvShowModel(
     val title: String,
     val rating: Double,
     val releaseDate: String,
-    val posterPath: String
+    val posterPath: String?
 ){
     val year: String
         get() = releaseDate.toFormattedDate(DateFormat.YYYY)

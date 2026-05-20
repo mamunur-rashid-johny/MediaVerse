@@ -1,10 +1,12 @@
 package com.johny.mediaverse.presentation
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -13,11 +15,13 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -25,7 +29,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.johny.mediaverse.core.navigation.BottomBar
 import com.johny.mediaverse.core.navigation.Destination
+import com.johny.mediaverse.core.navigation.LocalScaffoldPadding
 import com.johny.mediaverse.core.navigation.MediaVerseApp
+import com.johny.mediaverse.core.navigation.NavRail
 import com.johny.mediaverse.core.presentation.components.ConnectivityBanner
 import com.johny.mediaverse.core.presentation.utils.ObserveAsEvent
 import com.johny.mediaverse.core.utils.SnackbarController
@@ -93,6 +99,7 @@ fun App(
     }
     val bottomBarState = currentRoute in bottomBarRoutes
     val hazeState = remember { HazeState() }
+    val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -102,32 +109,49 @@ fun App(
             )
         },
         bottomBar = {
-            BottomBar(
-                visibility = bottomBarState,
-                navController = navController
-            )
+            if (!isLandscape) {
+                BottomBar(
+                    visibility = bottomBarState,
+                    navController = navController
+                )
+            }
         }
     ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .haze(
-                    state = hazeState,
-                    style = HazeDefaults.style(backgroundColor = MaterialTheme.colorScheme.surface)
-                )
+        Row(
+            modifier = Modifier.fillMaxSize()
         ) {
-            MediaVerseApp(
-                navController = navController,
-                startDestination = startDestination
-            )
-
-            ConnectivityBanner(
-                isConnected = isConnected,
+            if (isLandscape) {
+                NavRail(
+                    visibility = bottomBarState,
+                    navController = navController
+                )
+            }
+            Box(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(start = 10.dp, end = 10.dp)
-            )
+                    .fillMaxSize()
+                    .haze(
+                        state = hazeState,
+                        style = HazeDefaults.style(backgroundColor = MaterialTheme.colorScheme.surface)
+                    )
+            ) {
+                CompositionLocalProvider(LocalScaffoldPadding provides innerPadding) {
+                    MediaVerseApp(
+                        navController = navController,
+                        startDestination = startDestination
+                    )
+                }
+
+                ConnectivityBanner(
+                    isConnected = isConnected,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(
+                            start = 10.dp,
+                            end = 10.dp,
+                            bottom = innerPadding.calculateBottomPadding()
+                        )
+                )
+            }
         }
     }
 }

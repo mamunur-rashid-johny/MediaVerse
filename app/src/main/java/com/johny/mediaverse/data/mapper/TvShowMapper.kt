@@ -21,7 +21,7 @@ fun TvShowModel.toMovieEntity(): TvShowEntity {
         title = this.title,
         rating = this.rating,
         releaseDate = this.releaseDate,
-        posterPath = this.posterPath,
+        posterPath = this.posterPath?:"",
     )
 }
 

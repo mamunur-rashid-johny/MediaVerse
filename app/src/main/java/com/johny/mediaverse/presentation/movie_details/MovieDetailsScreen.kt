@@ -27,20 +27,24 @@ import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -62,70 +66,84 @@ fun MovieDetailsScreen(
     modifier: Modifier = Modifier,
     state: MovieDetailsState
 ) {
-    if (state.movieDetails != null && !state.isLoading){
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            Column(
-                modifier = Modifier
+
+    when {
+        state.movieDetails == null || state.isLoading -> {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = MaterialTheme.colorScheme.primary,
+                    strokeWidth = 4.dp
+                )
+            }
+        }
+
+        else -> {
+
+            Box(
+                modifier = modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
+                    .background(MaterialTheme.colorScheme.background)
             ) {
-                MovieHeader(state.movieDetails)
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    MovieHeader(state.movieDetails)
 
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = state.movieDetails.title,
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    if (state.movieDetails.tagline.isNotBlank()) {
+                    Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "\"${state.movieDetails.tagline}\"",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(vertical = 4.dp)
+                            text = state.movieDetails.title,
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold
                         )
+                        if (state.movieDetails.tagline.isNotBlank()) {
+                            Text(
+                                text = "\"${state.movieDetails.tagline}\"",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(vertical = 4.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        MovieMetaRow(state.movieDetails)
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        GenreList(state.movieDetails.genres)
+
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 24.dp),
+                            color = MaterialTheme.colorScheme.outlineVariant
+                        )
+
+                        SectionTitle("Overview")
+                        Text(
+                            text = state.movieDetails.overview,
+                            style = MaterialTheme.typography.bodyLarge,
+                            lineHeight = 24.sp,
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        FinancialsSection(
+                            budget = state.movieDetails.budget.toLong(),
+                            revenue = state.movieDetails.revenue.toLong()
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        SectionTitle("Production")
+
+                        ProductionList(state.movieDetails.productionCompanies)
+
+                        Spacer(modifier = Modifier.height(50.dp))
                     }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    MovieMetaRow(state.movieDetails)
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    GenreList(state.movieDetails.genres)
-
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 24.dp),
-                        color = MaterialTheme.colorScheme.outlineVariant
-                    )
-
-                    SectionTitle("Overview")
-                    Text(
-                        text = state.movieDetails.overview,
-                        style = MaterialTheme.typography.bodyLarge,
-                        lineHeight = 24.sp,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    FinancialsSection(
-                        budget = state.movieDetails.budget.toLong(),
-                        revenue = state.movieDetails.revenue.toLong()
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    SectionTitle("Production")
-
-                    ProductionList(state.movieDetails.productionCompanies)
-
-                    Spacer(modifier = Modifier.height(50.dp))
                 }
             }
         }
@@ -295,49 +313,65 @@ fun FinancialItem(label: String, amount: String, modifier: Modifier = Modifier) 
 }
 
 @Composable
-fun ProductionList(companies: List<ProductionCompanyModel>) {
+fun ProductionList(
+    companies: List<ProductionCompanyModel>,
+    modifier: Modifier = Modifier
+) {
     LazyRow(
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        items(companies) { company ->
+        items(companies, key = { it.id }) { company ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.width(80.dp)
+                modifier = Modifier.width(96.dp)
             ) {
-                CoilImage(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .padding(8.dp)
-                        .background(Color.White.copy(alpha = 0.1f), RoundedCornerShape(8.dp))
-                        .padding(4.dp),
-                    imageModel = { Constants.MovieDbUrl.IMAGE_ROOT_PATH + PosterSize.W500.value + company.logoPath },
-                    previewPlaceholder = painterResource(R.drawable.cinema_studio),
-                    imageOptions = ImageOptions(
-                        contentScale = ContentScale.Fit,
-                        alignment = Alignment.Center
-                    ),
-                    failure = {
-                        Image(
-                            painterResource(R.drawable.cinema_studio),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(60.dp)
-                                .padding(8.dp)
-                                .background(Color.White.copy(alpha = 0.1f), RoundedCornerShape(8.dp))
-                                .padding(4.dp),
-                        )
-                    }
-                )
+                Surface(
+                    modifier = Modifier.size(72.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    color = Color.White,
+                    tonalElevation = 2.dp,
+                    shadowElevation = 2.dp
+                ) {
+                    CoilImage(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(12.dp),
+                        imageModel = { Constants.MovieDbUrl.IMAGE_ROOT_PATH + PosterSize.W500.value + company.logoPath },
+                        previewPlaceholder = painterResource(R.drawable.image_broken),
+                        imageOptions = ImageOptions(
+                            contentScale = ContentScale.Fit,
+                            alignment = Alignment.Center
+                        ),
+                        failure = {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Image(
+                                    painter = painterResource(R.drawable.image_broken),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(32.dp),
+                                    alpha = 0.3f,
+                                    colorFilter = ColorFilter.tint(Color.Gray)
+                                )
+                            }
+                        }
+                    )
+                }
 
-
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
                     text = company.name,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    minLines = 2,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
         }

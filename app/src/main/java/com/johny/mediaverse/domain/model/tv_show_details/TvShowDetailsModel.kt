@@ -13,7 +13,7 @@ data class TvShowDetailsModel(
     val id: Int,
     val name: String,
     val overview: String,
-    val backdropPath: String,
+    val backdropPath: String?,
     val genres: List<GenreModel>,
     val lastEpisode: LastEpisodeModel,
     val seasons: List<SeasonModel>,

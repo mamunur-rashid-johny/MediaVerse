@@ -3,7 +3,6 @@ package com.johny.mediaverse.presentation.bookmark.movie_bookmark
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -13,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
+import com.johny.mediaverse.core.navigation.LocalScaffoldPadding
 import com.johny.mediaverse.core.presentation.components.EmptyOrErrorScreen
 import com.johny.mediaverse.core.presentation.components.ErrorRow
 import com.johny.mediaverse.core.presentation.components.LoadingRow
@@ -27,8 +27,7 @@ fun MovieBookmarkScreen(
     onIntent: (MovieBookmarkIntent) -> Unit,
 ) {
 
-    val isListEmpty = movies.loadState.refresh is LoadState.Error && movies.itemCount == 0
-
+    val isListEmpty = movies.loadState.refresh is LoadState.NotLoading && movies.itemCount == 0
     if (isListEmpty) {
         EmptyOrErrorScreen(
             title = "No Data Found",
@@ -40,11 +39,15 @@ fun MovieBookmarkScreen(
         )
     } else {
 
+        val bottomInset = LocalScaffoldPadding.current.calculateBottomPadding()
         LazyVerticalGrid(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(PaddingValues(12.dp)),
-            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+            modifier = modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                start = 20.dp,
+                end = 20.dp,
+                top = 20.dp,
+                bottom = bottomInset + 20.dp
+            ),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             columns = GridCells.Fixed(2)

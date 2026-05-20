@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TvShowDetailsDto(
     val adult: Boolean,
-    val backdrop_path: String,
+    val backdrop_path: String?,
     val created_by: List<CreatedByDto>,
     val episode_run_time: List<Int>,
     val first_air_date: String,
@@ -25,7 +25,7 @@ data class TvShowDetailsDto(
     val original_name: String,
     val overview: String,
     val popularity: Double,
-    val poster_path: String,
+    val poster_path: String?,
     val production_companies: List<ProductionCompanyDto>,
     val production_countries: List<ProductionCountryDto>,
     val seasons: List<SeasonDto>,

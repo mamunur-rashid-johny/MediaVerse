@@ -51,14 +51,17 @@ import com.johny.mediaverse.domain.model.tv_show_season.GuestStarModel
 import com.johny.mediaverse.domain.model.tv_show_season.TvShowSeasonModel
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
+import java.util.Locale
 
 @Composable
 fun TvShowSeasonDetailsScreen(
     state: TvShowSeasonState
 ) {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.background)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         if (state.seasonDetails == null || state.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
@@ -82,7 +85,9 @@ fun TvShowSeasonDetailsScreen(
                 items(state.seasonDetails.episodes) { episode ->
                     EpisodeItem(episode)
                 }
-                item { Spacer(Modifier.navigationBarsPadding().height(16.dp)) }
+                item { Spacer(Modifier
+                    .navigationBarsPadding()
+                    .height(16.dp)) }
             }
         }
     }
@@ -109,24 +114,29 @@ fun SeasonHeader(season: TvShowSeasonModel) {
                 CoilImage(
                     modifier = Modifier.fillMaxSize(),
                     imageModel = { Constants.MovieDbUrl.IMAGE_ROOT_PATH + PosterSize.W500.value + season.posterPath },
-                    previewPlaceholder = painterResource(R.drawable.cinema_studio),
+                    previewPlaceholder = painterResource(R.drawable.image_broken),
                     imageOptions = ImageOptions(
                         contentScale = ContentScale.Crop,
                         alignment = Alignment.Center
                     ),
                     failure = {
-                        Image(
-                            painterResource(R.drawable.cinema_studio),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(56.dp)
-                                .padding(8.dp)
-                                .background(
-                                    Color.White.copy(alpha = 0.1f),
-                                    RoundedCornerShape(8.dp)
-                                )
-                                .padding(4.dp),
-                        )
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                painterResource(R.drawable.image_broken),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(56.dp)
+                                    .padding(8.dp)
+                                    .background(
+                                        Color.White.copy(alpha = 0.1f),
+                                        RoundedCornerShape(8.dp)
+                                    )
+                                    .padding(4.dp),
+                            )
+                        }
                     }
                 )
             }
@@ -186,7 +196,7 @@ fun SeasonHeader(season: TvShowSeasonModel) {
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
-                        text = "${String.format("%.1f", season.voteAverage)} / 10",
+                        text = "${String.format(Locale.ENGLISH,"%.1f", season.voteAverage)} / 10",
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -213,24 +223,29 @@ fun EpisodeItem(episode: EpisodeModel) {
                 CoilImage(
                     modifier = Modifier.fillMaxSize(),
                     imageModel = { Constants.MovieDbUrl.IMAGE_ROOT_PATH + PosterSize.W500.value + episode.stillPath },
-                    previewPlaceholder = painterResource(R.drawable.cinema_studio),
+                    previewPlaceholder = painterResource(R.drawable.image_broken),
                     imageOptions = ImageOptions(
                         contentScale = ContentScale.Crop,
                         alignment = Alignment.Center
                     ),
                     failure = {
-                        Image(
-                            painterResource(R.drawable.cinema_studio),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(56.dp)
-                                .padding(8.dp)
-                                .background(
-                                    Color.White.copy(alpha = 0.1f),
-                                    RoundedCornerShape(8.dp)
-                                )
-                                .padding(4.dp),
-                        )
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                painterResource(R.drawable.image_broken),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(56.dp)
+                                    .padding(8.dp)
+                                    .background(
+                                        Color.White.copy(alpha = 0.1f),
+                                        RoundedCornerShape(8.dp)
+                                    )
+                                    .padding(4.dp),
+                            )
+                        }
                     }
                 )
                 Surface(
@@ -345,14 +360,14 @@ fun GuestStarItem(guest: GuestStarModel) {
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.surfaceVariant),
             imageModel = { Constants.MovieDbUrl.IMAGE_ROOT_PATH + PosterSize.W500.value + guest.profilePath },
-            previewPlaceholder = painterResource(R.drawable.cinema_studio),
+            previewPlaceholder = painterResource(R.drawable.image_broken),
             imageOptions = ImageOptions(
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.Center
             ),
             failure = {
                 Image(
-                    painterResource(R.drawable.cinema_studio),
+                    painterResource(R.drawable.image_broken),
                     contentDescription = null,
                     modifier = Modifier
                         .size(56.dp)

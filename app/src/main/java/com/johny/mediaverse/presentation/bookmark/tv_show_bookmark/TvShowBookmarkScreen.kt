@@ -3,7 +3,6 @@ package com.johny.mediaverse.presentation.bookmark.tv_show_bookmark
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -13,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
+import com.johny.mediaverse.core.navigation.LocalScaffoldPadding
 import com.johny.mediaverse.core.presentation.components.EmptyOrErrorScreen
 import com.johny.mediaverse.core.presentation.components.ErrorRow
 import com.johny.mediaverse.core.presentation.components.LoadingRow
@@ -27,7 +27,6 @@ fun TvShowBookmarkScreen(
     onIntent: (TvShowBookmarkIntent) -> Unit
 ) {
     val isListEmpty = tvShows.loadState.refresh is LoadState.NotLoading && tvShows.itemCount == 0
-
     if (isListEmpty) {
         EmptyOrErrorScreen(
             title = "No Data Found",
@@ -39,11 +38,15 @@ fun TvShowBookmarkScreen(
         )
     } else {
 
+        val bottomInset = LocalScaffoldPadding.current.calculateBottomPadding()
         LazyVerticalGrid(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(PaddingValues(12.dp)),
-            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+            modifier = modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                start = 20.dp,
+                end = 20.dp,
+                top = 20.dp,
+                bottom = bottomInset + 20.dp
+            ),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             columns = GridCells.Fixed(2)
@@ -77,7 +80,7 @@ fun TvShowBookmarkScreen(
                             span = { GridItemSpan(maxLineSpan) }
                         ) {
                             ErrorRow(
-                                message = error.error.message?:"Unknown Error"
+                                message = error.error.message ?: "Unknown Error"
                             ) { }
                         }
                     }

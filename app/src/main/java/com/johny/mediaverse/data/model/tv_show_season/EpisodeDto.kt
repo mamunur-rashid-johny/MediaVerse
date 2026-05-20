@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class EpisodeDto(
-    val air_date: String,
+    val air_date: String?,
     val crew: List<CrewDto>,
     val episode_number: Int,
     val episode_type: String,
@@ -13,10 +13,10 @@ data class EpisodeDto(
     val name: String,
     val overview: String,
     val production_code: String,
-    val runtime: Int,
+    val runtime: Int?,
     val season_number: Int,
     val show_id: Int,
-    val still_path: String,
+    val still_path: String?,
     val vote_average: Double,
     val vote_count: Int
 )

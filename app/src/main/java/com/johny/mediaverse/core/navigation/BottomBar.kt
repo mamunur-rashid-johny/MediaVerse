@@ -65,7 +65,6 @@ fun BottomBar(
         }
     )
 }
-//
 //@Composable
 //fun BottomBar(
 //    visibility: Boolean,

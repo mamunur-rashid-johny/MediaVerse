@@ -71,14 +71,14 @@ fun TvDetailsScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-    ){
-        if (state.tvShowDetails == null){
+    ) {
+        if (state.tvShowDetails == null) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
                 color = MaterialTheme.colorScheme.primary,
                 strokeWidth = 4.dp
             )
-        }else{
+        } else {
             state.tvShowDetails.let { details ->
                 LazyColumn(
                     state = scrollState,
@@ -180,22 +180,22 @@ fun TvDetailsScreen(
                         }
                     }
 
-                    itemsIndexed(details.seasons) { index,season ->
+                    itemsIndexed(details.seasons) { index, season ->
                         ListItem(
                             headlineContent = { Text(season.name) },
                             supportingContent = { Text("${season.episodeCount} Episodes • ${season.airDate ?: "N/A"}") },
                             leadingContent = {
                                 CoilImage(
-                                    modifier = Modifier.size(40.dp,60.dp),
+                                    modifier = Modifier.size(40.dp, 60.dp),
                                     imageModel = { Constants.MovieDbUrl.IMAGE_ROOT_PATH + PosterSize.W500.value + season.posterPath },
-                                    previewPlaceholder = painterResource(R.drawable.cinema_studio),
+                                    previewPlaceholder = painterResource(R.drawable.image_broken),
                                     imageOptions = ImageOptions(
                                         contentScale = ContentScale.Crop,
                                         alignment = Alignment.Center
                                     ),
                                     failure = {
                                         Image(
-                                            painterResource(R.drawable.cinema_studio),
+                                            painterResource(R.drawable.image_broken),
                                             contentDescription = null,
                                             modifier = Modifier
                                                 .size(60.dp)
@@ -215,7 +215,7 @@ fun TvDetailsScreen(
                                 }
                             )
                         )
-                        if (index < details.seasons.lastIndex){
+                        if (index < details.seasons.lastIndex) {
                             HorizontalDivider(
                                 modifier = Modifier.padding(horizontal = 16.dp),
                                 color = MaterialTheme.colorScheme.outlineVariant
@@ -223,9 +223,13 @@ fun TvDetailsScreen(
                         }
                     }
 
-                    item { Spacer(Modifier
-                        .navigationBarsPadding()
-                        .height(32.dp)) }
+                    item {
+                        Spacer(
+                            Modifier
+                                .navigationBarsPadding()
+                                .height(32.dp)
+                        )
+                    }
                 }
             }
         }
@@ -233,11 +237,9 @@ fun TvDetailsScreen(
 }
 
 
-
-
 @Composable
 fun BackdropHeaderWithParallax(
-    backdropPath: String,
+    backdropPath: String?,
     title: String,
     tagline: String,
     scrollState: LazyListState
@@ -265,14 +267,14 @@ fun BackdropHeaderWithParallax(
                     translationY = parallaxOffset
                 },
             imageModel = { Constants.MovieDbUrl.IMAGE_ROOT_PATH + PosterSize.W500.value + backdropPath },
-            previewPlaceholder = painterResource(R.drawable.cinema_studio),
+            previewPlaceholder = painterResource(R.drawable.image_broken),
             imageOptions = ImageOptions(
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.Center
             ),
             failure = {
                 Image(
-                    painterResource(R.drawable.cinema_studio),
+                    painterResource(R.drawable.image_broken),
                     contentDescription = null,
                     modifier = Modifier
                         .size(60.dp)
