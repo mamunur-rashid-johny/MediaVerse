@@ -1,6 +1,8 @@
 package com.johny.mediaverse.presentation.tv_show_details
 
+import android.app.Activity
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,13 +12,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
@@ -35,6 +44,7 @@ import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -45,11 +55,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import com.johny.mediaverse.R
 import com.johny.mediaverse.core.utils.Constants
 import com.johny.mediaverse.domain.config.PosterSize
@@ -65,6 +77,33 @@ fun TvDetailsScreen(
     val scrollState = rememberLazyListState()
     val showCondensedTitle by remember {
         derivedStateOf { scrollState.firstVisibleItemIndex > 0 }
+    }
+    val isStickyHeaderStuck by remember {
+        derivedStateOf {
+            scrollState.firstVisibleItemIndex > 0 ||
+                scrollState.firstVisibleItemScrollOffset > 0
+        }
+    }
+    val statusBarTopPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+    val stickyHeaderTopPadding by animateDpAsState(
+        targetValue = if (isStickyHeaderStuck) statusBarTopPadding else 0.dp,
+        label = "stickyHeaderTopPadding"
+    )
+    val safeContentModifier = Modifier.windowInsetsPadding(
+        WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
+    )
+
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        DisposableEffect(isStickyHeaderStuck) {
+            val window = (view.context as Activity).window
+            val controller = WindowCompat.getInsetsController(window, view)
+            val previousAppearance = controller.isAppearanceLightStatusBars
+            controller.isAppearanceLightStatusBars = isStickyHeaderStuck
+            onDispose {
+                controller.isAppearanceLightStatusBars = previousAppearance
+            }
+        }
     }
 
     Box(
@@ -96,11 +135,14 @@ fun TvDetailsScreen(
 
                     stickyHeader {
                         Surface(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color.White)
+                                .padding(top = stickyHeaderTopPadding),
                             color = MaterialTheme.colorScheme.surface,
                             tonalElevation = 4.dp
                         ) {
-                            Column {
+                            Column(modifier = safeContentModifier) {
                                 Row(
                                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
                                     verticalAlignment = Alignment.CenterVertically,
@@ -136,7 +178,7 @@ fun TvDetailsScreen(
                     }
 
                     item {
-                        Column(modifier = Modifier.padding(16.dp)) {
+                        Column(modifier = safeContentModifier.padding(16.dp)) {
                             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 items(details.genres) { genre ->
                                     SuggestionChip(
@@ -159,7 +201,7 @@ fun TvDetailsScreen(
                     item {
                         val lastEp = details.lastEpisode
                         Card(
-                            modifier = Modifier.padding(16.dp),
+                            modifier = safeContentModifier.padding(16.dp),
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
@@ -209,7 +251,7 @@ fun TvDetailsScreen(
                                     }
                                 )
                             },
-                            modifier = Modifier.clickable(
+                            modifier = safeContentModifier.clickable(
                                 onClick = {
                                     onIntent(TvShowDetailsIntent.OnNavigateToSeriesDetails(seriesId = details.id, seasonNumber = season.seasonNumber))
                                 }
@@ -217,7 +259,7 @@ fun TvDetailsScreen(
                         )
                         if (index < details.seasons.lastIndex) {
                             HorizontalDivider(
-                                modifier = Modifier.padding(horizontal = 16.dp),
+                                modifier = safeContentModifier.padding(horizontal = 16.dp),
                                 color = MaterialTheme.colorScheme.outlineVariant
                             )
                         }
