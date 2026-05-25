@@ -5,9 +5,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,6 +27,7 @@ import com.johny.mediaverse.core.presentation.components.LoadingRow
 import com.johny.mediaverse.presentation.podcast.components.PodcastItem
 import com.johny.mediaverse.presentation.podcast.ui_model.PodcastUIModel
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PodcastScreen(
     podcasts: LazyPagingItems<PodcastUIModel>,
@@ -46,10 +50,11 @@ fun PodcastScreen(
 
         podcasts.loadState.refresh is LoadState.Loading && podcasts.itemCount == 0 -> {
             Box(modifier = Modifier.fillMaxSize()) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.primary,
-                    strokeWidth = 4.dp
+                LoadingIndicator(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .align(Alignment.Center),
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -60,8 +65,8 @@ fun PodcastScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(
-                    start = scaffoldPadding.calculateStartPadding(layoutDirection) + 20.dp,
-                    end = scaffoldPadding.calculateEndPadding(layoutDirection) + 20.dp,
+                    start = 16.dp,
+                    end = 16.dp,
                     top = scaffoldPadding.calculateTopPadding() + 20.dp,
                     bottom = scaffoldPadding.calculateBottomPadding() + 20.dp
                 )

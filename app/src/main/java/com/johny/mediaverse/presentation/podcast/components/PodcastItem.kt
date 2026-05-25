@@ -47,7 +47,7 @@ fun PodcastItem(
             .clickable {
                 onIntent(PodcastIntent.OnItemClick(podcastUi.podcast))
             }
-            .padding(vertical = 12.dp, horizontal = 16.dp),
+            .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val modelLambda = remember(podcastUi.podcast.thumbnail) { { podcastUi.podcast.thumbnail } }

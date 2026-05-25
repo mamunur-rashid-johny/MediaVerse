@@ -22,7 +22,7 @@ class TvShowViewModel(
 ) : ViewModel() {
 
     val bookmarkFlow = repository.getSavedTvShowIds().distinctUntilChanged()
-    val tvShowFlow = repository.getMovies().cachedIn(viewModelScope)
+    val tvShowFlow = repository.getTvShows().cachedIn(viewModelScope)
     val tvShows: Flow<PagingData<TvShowUiModel>> =
         tvShowFlow.combine(bookmarkFlow) { tvShows, bookmarkIds ->
             tvShows.map {

@@ -24,6 +24,7 @@ object Constants {
         const val TV_DETAILS = "tv/"
         const val TV_SEASON = "/season/"
         const val IMAGE_ROOT_PATH ="https://image.tmdb.org/t/p/"
+        const val SIMILAR_TV_SHOW = "/similar"
     }
 
     object ApiQueryParam{

@@ -6,7 +6,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.johny.mediaverse.core.navigation.Destination
+import com.johny.mediaverse.core.navigation.Destination.*
 import com.johny.mediaverse.core.presentation.utils.ObserveAsEvent
 import com.johny.mediaverse.core.presentation.utils.toString
 import com.johny.mediaverse.core.utils.SnackbarController
@@ -20,11 +22,12 @@ internal fun TvShowDetailsRoute(navController: NavController) {
     val scope = rememberCoroutineScope()
     val viewModel: TvShowDetailsViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val tvShows = viewModel.tvShows.collectAsLazyPagingItems()
 
     ObserveAsEvent(events = viewModel.effect) { effect ->
         when(effect){
             is TvShowDetailsSideEffect.OnNavigateSideEffect -> {
-                navController.navigate(Destination.TvShowSeasonDetailRoute(tvShowId = effect.seriesId, seasonNumber = effect.seasonNumber))
+                navController.navigate(TvShowSeasonDetailRoute(tvShowId = effect.seriesId, seasonNumber = effect.seasonNumber))
             }
             is TvShowDetailsSideEffect.ShowErrorMessage -> {
                 scope.launch {
@@ -35,11 +38,16 @@ internal fun TvShowDetailsRoute(navController: NavController) {
                     )
                 }
             }
+
+            is TvShowDetailsSideEffect.NavigateToDetailsEffect -> {
+                navController.navigate(TvShowDetailRoute(effect.tvShowId))
+            }
         }
     }
 
     TvDetailsScreen(
         state = state,
+        tvShows = tvShows,
         onIntent = viewModel::onIntent
     )
 }

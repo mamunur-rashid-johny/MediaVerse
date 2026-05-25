@@ -6,12 +6,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -38,7 +35,6 @@ import com.johny.mediaverse.R
 import com.johny.mediaverse.domain.model.podcast_details.EpisodeModel
 import com.johny.mediaverse.domain.model.podcast_details.PodcastHeaderDetails
 import com.johny.mediaverse.presentation.ui.theme.MediaVerseTheme
-import com.johny.mediaverse.utils.shimmerEffect
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 
@@ -72,7 +68,7 @@ fun PodcastDetailsHeader(
         Text(
             text = headerData.title,
             style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 16.dp),
+            modifier = Modifier.padding(top = 16.dp),
             textAlign = TextAlign.Center
         )
 
@@ -80,15 +76,14 @@ fun PodcastDetailsHeader(
         Text(
             text = headerData.publisher,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
+            modifier = Modifier.padding(top = 8.dp),
             textAlign = TextAlign.Center
         )
 
         HtmlText(
             html = headerData.description,
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
+            modifier = Modifier.padding(top = 8.dp),
             style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
             onLinkClick = {
 
             }
@@ -96,10 +91,10 @@ fun PodcastDetailsHeader(
 
         //play button and website link
         FlowRow(
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
+            modifier = Modifier.padding(top = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
+        ) {
             ElevatedButton(
                 onClick = {
                     if (headerData.latestEpisode != null) onPlayLatestEpisode(headerData.latestEpisode) else onErrorMessage(
@@ -172,117 +167,6 @@ fun PodcastDetailsHeader(
 
 
 @Composable
-fun PodcastDetailsHeaderShimmer(
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Box(
-            modifier = Modifier
-                .padding(top = 40.dp)
-                .size(180.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .shimmerEffect()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Box(
-            modifier = Modifier
-                .height(28.dp) // Height of HeadlineMedium
-                .fillMaxWidth(0.7f) // Width simulation
-                .clip(RoundedCornerShape(4.dp))
-                .shimmerEffect()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-        Box(
-            modifier = Modifier
-                .height(16.dp)
-                .fillMaxWidth(0.4f)
-                .clip(RoundedCornerShape(4.dp))
-                .shimmerEffect()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .height(16.dp)
-                    .fillMaxWidth(0.9f)
-                    .clip(RoundedCornerShape(4.dp))
-                    .shimmerEffect()
-            )
-            Box(
-                modifier = Modifier
-                    .height(16.dp)
-                    .fillMaxWidth(0.8f)
-                    .clip(RoundedCornerShape(4.dp))
-                    .shimmerEffect()
-            )
-            Box(
-                modifier = Modifier
-                    .height(16.dp)
-                    .fillMaxWidth(0.5f)
-                    .clip(RoundedCornerShape(4.dp))
-                    .shimmerEffect()
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Absolute.SpaceEvenly
-        ) {
-            Box(
-                modifier = Modifier
-                    .height(40.dp)
-                    .width(140.dp)
-                    .clip(CircleShape) // Buttons usually have full rounded corners
-                    .shimmerEffect()
-            )
-            Box(
-                modifier = Modifier
-                    .height(40.dp)
-                    .width(140.dp)
-                    .clip(CircleShape)
-                    .shimmerEffect()
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .height(24.dp)
-                    .width(150.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .shimmerEffect()
-            )
-
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(CircleShape)
-                    .shimmerEffect()
-            )
-        }
-    }
-}
-
-@Composable
 fun CircularBadge(
     text: String,
     backgroundColor: Color,
@@ -340,13 +224,5 @@ private fun PodcastDetailsHeaderPreview() {
             onWebsiteLinkPress = {},
             onErrorMessage = {}
         )
-    }
-}
-
-@Preview
-@Composable
-private fun PodcastHeaderDetailsShimmerPreview() {
-    MediaVerseTheme {
-        PodcastDetailsHeaderShimmer()
     }
 }

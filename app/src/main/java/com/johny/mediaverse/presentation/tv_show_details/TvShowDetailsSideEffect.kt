@@ -1,6 +1,5 @@
 package com.johny.mediaverse.presentation.tv_show_details
 
-import androidx.annotation.StringRes
 import com.johny.mediaverse.core.domain.utils.NetworkError
 
 /**
@@ -8,6 +7,7 @@ import com.johny.mediaverse.core.domain.utils.NetworkError
  * Copyright (c) 2026 Pathao Ltd. All rights reserved.
  */
 sealed interface TvShowDetailsSideEffect {
-    data class OnNavigateSideEffect(val seriesId: Int, val seasonNumber: Int):TvShowDetailsSideEffect
-    data class ShowErrorMessage(val message: NetworkError): TvShowDetailsSideEffect
+    data class OnNavigateSideEffect(val seriesId: Int, val seasonNumber: Int) : TvShowDetailsSideEffect
+    data class NavigateToDetailsEffect(val tvShowId: Int) : TvShowDetailsSideEffect
+    data class ShowErrorMessage(val message: NetworkError) : TvShowDetailsSideEffect
 }

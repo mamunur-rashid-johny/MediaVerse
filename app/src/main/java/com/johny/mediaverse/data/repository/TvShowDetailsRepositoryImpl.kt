@@ -1,41 +1,57 @@
 package com.johny.mediaverse.data.repository
 
-import androidx.compose.ui.unit.Constraints
-import com.johny.mediaverse.BuildConfig
-import com.johny.mediaverse.core.data.networking.safeCall
+import android.content.Context
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.johny.mediaverse.core.domain.utils.NetworkError
 import com.johny.mediaverse.core.domain.utils.Result
-import com.johny.mediaverse.core.domain.utils.map
-import com.johny.mediaverse.core.utils.Constants
-import com.johny.mediaverse.core.utils.Constants.ApiQueryParam.LANGUAGE
-import com.johny.mediaverse.core.utils.Constants.ApiQueryParam.LANGUAGE_VALUE
-import com.johny.mediaverse.data.mapper.toTvShowDetailsModel
-import com.johny.mediaverse.data.model.tv_show_details.TvShowDetailsDto
+import com.johny.mediaverse.data.local.dao.TvShowDao
+import com.johny.mediaverse.data.mapper.toMovieEntity
+import com.johny.mediaverse.domain.model.tv_show.TvShowModel
 import com.johny.mediaverse.domain.model.tv_show_details.TvShowDetailsModel
+import com.johny.mediaverse.domain.paging_source.SimilarTvShowPagingSource
+import com.johny.mediaverse.domain.repository.SimilarTvShowApi
 import com.johny.mediaverse.domain.repository.TvShowDetailsRepository
-import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import io.ktor.client.request.parameter
-import io.ktor.http.HttpHeaders
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 /**
  * Created by Johny on 22/2/26.
  * Copyright (c) 2026 Pathao Ltd. All rights reserved.
  */
 class TvShowDetailsRepositoryImpl(
-    private val httpClient: HttpClient
-): TvShowDetailsRepository {
+    private val api: SimilarTvShowApi,
+    private val context: Context,
+    private val dao: TvShowDao
+) : TvShowDetailsRepository {
     override suspend fun getTvShowDetails(tvShowId: Int): Result<TvShowDetailsModel, NetworkError> {
-        return safeCall<TvShowDetailsDto> {
-            httpClient.get(
-                urlString = BuildConfig.MOVIE_DB_BASE_URL + Constants.MovieDbUrl.TV_DETAILS + "$tvShowId"
-            ){
-                headers.append(HttpHeaders.Authorization,"Bearer ${BuildConfig.MOVIE_DB_ACCESS_TOKEN}")
-                headers.append(HttpHeaders.Accept, "application/json")
-                parameter(LANGUAGE, LANGUAGE_VALUE)
+        return api.getTvShowDetails(tvShowId)
+    }
+
+    override fun getSimilarTvShows(tvShowId: Int): Flow<PagingData<TvShowModel>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false,
+                prefetchDistance = 5
+            ),
+            pagingSourceFactory = {
+                SimilarTvShowPagingSource(api, context, tvShowId)
             }
-        }.map {
-            it.toTvShowDetailsModel()
-        }
+        ).flow
+    }
+
+    override fun getSavedTvShowIds(): Flow<Set<Int>> {
+        return dao.getTvShowId()
+            .map { it.toSet() }
+    }
+
+    override suspend fun saveBookmark(tvShow: TvShowModel) {
+        dao.saveTvShow(tvShow.toMovieEntity())
+    }
+
+    override suspend fun removeBookmark(tvShowId: Int) {
+        dao.removeTvShow(tvShowId)
     }
 }

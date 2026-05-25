@@ -21,6 +21,8 @@ import com.johny.mediaverse.domain.repository.MovieRepository
 import com.johny.mediaverse.domain.repository.PodcastDetailRepository
 import com.johny.mediaverse.domain.repository.PodcastRepository
 import com.johny.mediaverse.domain.repository.SeasonRepository
+import com.johny.mediaverse.domain.repository.SimilarTvShowApi
+import com.johny.mediaverse.domain.repository.SimilarTvShowApiImpl
 import com.johny.mediaverse.domain.repository.TvShowApi
 import com.johny.mediaverse.domain.repository.TvShowDetailsRepository
 import com.johny.mediaverse.domain.repository.TvShowRepository
@@ -41,4 +43,5 @@ val repositoryModule = module {
     singleOf(::MovieDetailsRepositoryImp).bind<MovieDetailsRepository>()
     singleOf(::TvShowDetailsRepositoryImpl).bind<TvShowDetailsRepository>()
     singleOf(::SeasonRepositoryImpl).bind<SeasonRepository>()
+    singleOf(::SimilarTvShowApiImpl).bind<SimilarTvShowApi>()
 }

@@ -1,5 +1,6 @@
 package com.johny.mediaverse.presentation.web_view
 
+import android.annotation.SuppressLint
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.johny.mediaverse.presentation.web_view.componets.WebViewShimmer
 
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebViewScreen(
     modifier: Modifier = Modifier,

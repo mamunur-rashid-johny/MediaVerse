@@ -7,14 +7,18 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +29,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -34,11 +39,17 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Surface
@@ -62,32 +73,38 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import com.johny.mediaverse.R
 import com.johny.mediaverse.core.utils.Constants
 import com.johny.mediaverse.domain.config.PosterSize
+import com.johny.mediaverse.presentation.tv_show.model.TvShowUiModel
+import com.johny.mediaverse.utils.shimmerEffect
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TvDetailsScreen(
     state: TvShowDetailsState,
+    tvShows: LazyPagingItems<TvShowUiModel>,
     onIntent: (TvShowDetailsIntent) -> Unit
 ) {
+    val lazyListState = rememberLazyListState()
+
     val scrollState = rememberLazyListState()
     val showCondensedTitle by remember {
         derivedStateOf { scrollState.firstVisibleItemIndex > 0 }
     }
     val isStickyHeaderStuck by remember {
         derivedStateOf {
-            scrollState.firstVisibleItemIndex > 0 ||
-                scrollState.firstVisibleItemScrollOffset > 0
+            scrollState.firstVisibleItemIndex > 0 || scrollState.firstVisibleItemScrollOffset > 0
         }
     }
     val statusBarTopPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val stickyHeaderTopPadding by animateDpAsState(
-        targetValue = if (isStickyHeaderStuck) statusBarTopPadding else 0.dp,
-        label = "stickyHeaderTopPadding"
+        targetValue = if (isStickyHeaderStuck) statusBarTopPadding else 0.dp, label = "stickyHeaderTopPadding"
     )
     val safeContentModifier = Modifier.windowInsetsPadding(
         WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
@@ -112,24 +129,20 @@ fun TvDetailsScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         if (state.tvShowDetails == null) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center),
-                color = MaterialTheme.colorScheme.primary,
-                strokeWidth = 4.dp
+            LoadingIndicator(
+                modifier = Modifier
+                    .size(48.dp)
+                    .align(Alignment.Center), color = MaterialTheme.colorScheme.primary
             )
         } else {
             state.tvShowDetails.let { details ->
                 LazyColumn(
-                    state = scrollState,
-                    modifier = Modifier.fillMaxSize()
+                    state = scrollState, modifier = Modifier.fillMaxSize()
                 ) {
 
                     item {
                         BackdropHeaderWithParallax(
-                            backdropPath = details.backdropPath,
-                            title = details.name,
-                            tagline = details.tagline,
-                            scrollState = scrollState
+                            backdropPath = details.backdropPath, title = details.name, tagline = details.tagline, scrollState = scrollState
                         )
                     }
 
@@ -138,21 +151,15 @@ fun TvDetailsScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(Color.White)
-                                .padding(top = stickyHeaderTopPadding),
-                            color = MaterialTheme.colorScheme.surface,
-                            tonalElevation = 4.dp
+                                .padding(top = stickyHeaderTopPadding), color = MaterialTheme.colorScheme.surface, tonalElevation = 4.dp
                         ) {
                             Column(modifier = safeContentModifier) {
                                 Row(
-                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceAround
+                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround
                                 ) {
                                     AnimatedVisibility(visible = showCondensedTitle) {
                                         Text(
-                                            text = details.name,
-                                            style = MaterialTheme.typography.titleMedium,
-                                            modifier = Modifier
+                                            text = details.name, style = MaterialTheme.typography.titleMedium, modifier = Modifier
                                                 .padding(end = 12.dp)
                                                 .weight(1f)
                                         )
@@ -166,10 +173,7 @@ fun TvDetailsScreen(
                                     )
                                     Spacer(Modifier.weight(1f))
                                     Text(
-                                        text = details.networks.firstOrNull()?.name ?: "",
-                                        fontWeight = FontWeight.Bold,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
+                                        text = details.networks.firstOrNull()?.name ?: "", fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis
                                     )
                                 }
                                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
@@ -182,18 +186,13 @@ fun TvDetailsScreen(
                             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 items(details.genres) { genre ->
                                     SuggestionChip(
-                                        onClick = { },
-                                        label = { Text(genre.name) },
-                                        shape = CircleShape
+                                        onClick = { }, label = { Text(genre.name) }, shape = CircleShape
                                     )
                                 }
                             }
 
                             Text(
-                                text = details.overview,
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.padding(vertical = 12.dp),
-                                lineHeight = 22.sp
+                                text = details.overview, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(vertical = 12.dp), lineHeight = 22.sp
                             )
                         }
                     }
@@ -201,22 +200,17 @@ fun TvDetailsScreen(
                     item {
                         val lastEp = details.lastEpisode
                         Card(
-                            modifier = safeContentModifier.padding(16.dp),
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                            modifier = safeContentModifier.padding(16.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Text("LAST EPISODE TO AIR", style = MaterialTheme.typography.labelSmall)
                                 Text(lastEp.name, style = MaterialTheme.typography.titleLarge)
                                 Text(
-                                    "Season ${lastEp.seasonNumber}, Episode ${lastEp.episodeNumber}",
-                                    style = MaterialTheme.typography.bodySmall
+                                    "Season ${lastEp.seasonNumber}, Episode ${lastEp.episodeNumber}", style = MaterialTheme.typography.bodySmall
                                 )
                                 Spacer(Modifier.height(8.dp))
                                 Text(
-                                    lastEp.overview,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    maxLines = 3,
-                                    overflow = TextOverflow.Ellipsis
+                                    lastEp.overview, style = MaterialTheme.typography.bodyMedium, maxLines = 3, overflow = TextOverflow.Ellipsis
                                 )
                             }
                         }
@@ -224,16 +218,13 @@ fun TvDetailsScreen(
 
                     itemsIndexed(details.seasons) { index, season ->
                         ListItem(
-                            headlineContent = { Text(season.name) },
-                            supportingContent = { Text("${season.episodeCount} Episodes • ${season.airDate ?: "N/A"}") },
-                            leadingContent = {
+                            headlineContent = { Text(season.name) }, supportingContent = { Text("${season.episodeCount} Episodes • ${season.airDate ?: "N/A"}") }, leadingContent = {
                                 CoilImage(
                                     modifier = Modifier.size(40.dp, 60.dp),
                                     imageModel = { Constants.MovieDbUrl.IMAGE_ROOT_PATH + PosterSize.W500.value + season.posterPath },
                                     previewPlaceholder = painterResource(R.drawable.image_broken),
                                     imageOptions = ImageOptions(
-                                        contentScale = ContentScale.Crop,
-                                        alignment = Alignment.Center
+                                        contentScale = ContentScale.Crop, alignment = Alignment.Center
                                     ),
                                     failure = {
                                         Image(
@@ -243,25 +234,75 @@ fun TvDetailsScreen(
                                                 .size(60.dp)
                                                 .padding(8.dp)
                                                 .background(
-                                                    Color.White.copy(alpha = 0.1f),
-                                                    RoundedCornerShape(8.dp)
+                                                    Color.White.copy(alpha = 0.1f), RoundedCornerShape(8.dp)
                                                 )
                                                 .padding(4.dp),
                                         )
-                                    }
-                                )
-                            },
-                            modifier = safeContentModifier.clickable(
+                                    })
+                            }, modifier = safeContentModifier.clickable(
                                 onClick = {
                                     onIntent(TvShowDetailsIntent.OnNavigateToSeriesDetails(seriesId = details.id, seasonNumber = season.seasonNumber))
-                                }
-                            )
+                                })
                         )
                         if (index < details.seasons.lastIndex) {
                             HorizontalDivider(
-                                modifier = safeContentModifier.padding(horizontal = 16.dp),
-                                color = MaterialTheme.colorScheme.outlineVariant
+                                modifier = safeContentModifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outlineVariant
                             )
+                        }
+                    }
+
+                    if (tvShows.itemCount != 0) {
+                        item {
+                            Text(
+                                text = "Similar TV Shows",
+                                style = MaterialTheme.typography.titleLarge,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .fillMaxWidth()
+                            )
+                        }
+                    }
+
+                    item {
+                        LazyRow(
+                            state = lazyListState,
+                            flingBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState),
+                            contentPadding = PaddingValues(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            items(tvShows.itemCount, key = tvShows.itemKey { it.tvShow.id }) { index ->
+                                val tvShow = tvShows[index]
+                                tvShow?.let {
+                                    TvShowItemRow(
+                                        tvShowUi = it,
+                                        onIntent = onIntent
+                                    )
+                                }
+                            }
+
+                            tvShows.apply {
+                                if (loadState.append is LoadState.Loading) {
+                                    item {
+                                        Box(
+                                            modifier = Modifier
+                                                .width(150.dp)
+                                                .aspectRatio(0.7f),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            LoadingIndicator(
+                                                modifier = Modifier
+                                                    .size(32.dp)
+                                                    .align(Alignment.Center),
+                                                color = MaterialTheme.colorScheme.primary
+                                            )
+                                        }
+                                    }
+                                }
+
+                            }
                         }
                     }
 
@@ -281,10 +322,7 @@ fun TvDetailsScreen(
 
 @Composable
 fun BackdropHeaderWithParallax(
-    backdropPath: String?,
-    title: String,
-    tagline: String,
-    scrollState: LazyListState
+    backdropPath: String?, title: String, tagline: String, scrollState: LazyListState
 ) {
     val parallaxOffset by remember {
         derivedStateOf {
@@ -311,8 +349,7 @@ fun BackdropHeaderWithParallax(
             imageModel = { Constants.MovieDbUrl.IMAGE_ROOT_PATH + PosterSize.W500.value + backdropPath },
             previewPlaceholder = painterResource(R.drawable.image_broken),
             imageOptions = ImageOptions(
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center
+                contentScale = ContentScale.Crop, alignment = Alignment.Center
             ),
             failure = {
                 Image(
@@ -324,16 +361,14 @@ fun BackdropHeaderWithParallax(
                         .background(Color.White.copy(alpha = 0.1f), RoundedCornerShape(8.dp))
                         .padding(4.dp),
                 )
-            }
-        )
+            })
 
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
                     brush = Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.8f)),
-                        startY = 300f
+                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.8f)), startY = 300f
                     )
                 )
         )
@@ -345,16 +380,107 @@ fun BackdropHeaderWithParallax(
                 .statusBarsPadding()
         ) {
             Text(
-                text = tagline.uppercase(),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.secondary
+                text = tagline.uppercase(), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.secondary
             )
             Text(
-                text = title,
-                style = MaterialTheme.typography.headlineLarge,
-                color = Color.White,
-                fontWeight = FontWeight.Bold
+                text = title, style = MaterialTheme.typography.headlineLarge, color = Color.White, fontWeight = FontWeight.Bold
             )
+        }
+    }
+}
+
+@Composable
+fun TvShowItemRow(
+    modifier: Modifier = Modifier,
+    tvShowUi: TvShowUiModel,
+    onIntent: (TvShowDetailsIntent) -> Unit?
+) {
+    Column(
+        modifier = modifier
+            .width(150.dp)
+            .clickable {
+                onIntent(TvShowDetailsIntent.NavigateToDetailsIntent(tvShowUi.tvShow.id))
+            }) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(0.7f)
+        ) {
+            Surface(
+                modifier = Modifier.fillMaxSize(), shape = RoundedCornerShape(12.dp), color = MaterialTheme.colorScheme.surfaceVariant
+            ) {
+                CoilImage(
+                    modifier = Modifier.fillMaxSize(), imageModel = { Constants.MovieDbUrl.IMAGE_ROOT_PATH + PosterSize.W500.value + tvShowUi.tvShow.posterPath }, imageOptions = ImageOptions(
+                        contentScale = ContentScale.Crop, alignment = Alignment.Center
+                    ), previewPlaceholder = painterResource(R.drawable.image_broken), failure = {
+                        Box(
+                            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .shimmerEffect()
+                            )
+                        }
+                    })
+            }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(8.dp)
+                    .size(40.dp)
+                    .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, onClick = {
+                        val intent = if (tvShowUi.isBookmarked) {
+                            TvShowDetailsIntent.RemoveBookmarkIntent(tvShowUi.tvShow.id)
+                        } else {
+                            TvShowDetailsIntent.SaveBookmarkIntent(tvShowUi.tvShow)
+                        }
+                        onIntent(intent)
+                    }), contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .background(Color.Black.copy(alpha = 0.6f), CircleShape), contentAlignment = Alignment.Center
+                ) {
+                    val (icon, color) = if (tvShowUi.isBookmarked) {
+                        Icons.Default.Bookmark to MaterialTheme.colorScheme.primary
+                    } else {
+                        Icons.Default.BookmarkBorder to Color.White
+                    }
+                    Icon(
+                        imageVector = icon, contentDescription = null, modifier = Modifier.size(18.dp), tint = color
+                    )
+                }
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp, start = 4.dp, end = 4.dp)
+        ) {
+            Text(
+                text = tvShowUi.tvShow.title, style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis, color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = tvShowUi.tvShow.year, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Default.Star, contentDescription = null, modifier = Modifier.size(12.dp), tint = Color(0xFFFFC107)
+                )
+                Spacer(modifier = Modifier.width(2.dp))
+                Text(
+                    text = tvShowUi.tvShow.rating.toString(), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }

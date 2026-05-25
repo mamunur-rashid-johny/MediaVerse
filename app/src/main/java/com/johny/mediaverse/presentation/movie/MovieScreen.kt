@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,6 +30,7 @@ import com.johny.mediaverse.presentation.movie.components.MovieGridItem
 import com.johny.mediaverse.presentation.movie.model.MovieModelUi
 
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MovieScreen(
     movies: LazyPagingItems<MovieModelUi>,
@@ -49,10 +53,11 @@ fun MovieScreen(
 
         movies.loadState.refresh is LoadState.Loading && movies.itemCount == 0 -> {
             Box(modifier = Modifier.fillMaxSize()) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.primary,
-                    strokeWidth = 4.dp
+                LoadingIndicator(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .align(Alignment.Center),
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }

@@ -15,7 +15,12 @@ import org.koin.dsl.module
 
 val appModule = module {
     //ktor-client
-    single { HttpClientFactory.create(CIO.create()) }
+    single {
+        HttpClientFactory.create(
+            engine = CIO.create(),
+            cacheDir = androidContext().cacheDir.resolve("http_cache")
+        )
+    }
     //shared preference
     single { PreferenceManager(androidContext()) }
 

@@ -18,7 +18,7 @@ class TvShowRepositoryImp(
     private val dao: TvShowDao,
     private val context: Context
 ) : TvShowRepository {
-    override fun getMovies(): Flow<PagingData<TvShowModel>> {
+    override fun getTvShows(): Flow<PagingData<TvShowModel>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 20,

@@ -1,12 +1,10 @@
 package com.johny.mediaverse.utils
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Build
 import android.provider.Settings
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
@@ -134,14 +132,6 @@ fun Modifier.shimmerEffect(): Modifier = composed {
     )
 }
 
-fun CharSequence.trimTrailingWhitespace(): CharSequence {
-    var i = this.length
-    while (i > 0 && Character.isWhitespace(this[i - 1])) {
-        i--
-    }
-    return this.subSequence(0, i)
-}
-
 fun Long.formatTime(): String {
     val totalSeconds = this / 1000
     val minutes = totalSeconds / 60
@@ -220,27 +210,18 @@ fun String.parseHtml(
 }
 
 
-@SuppressLint("ObsoleteSdkInt")
-@Suppress("DEPRECATION")
 fun Context.checkInternet(): Boolean {
-    val manager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        val network = manager.activeNetwork ?: return false
-        val activeNetwork = manager.getNetworkCapabilities(network) ?: return false
-        return when {
-            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            else -> false
-        }
-    } else {
-        val networkInfo = manager.activeNetworkInfo ?: return false
-        return networkInfo.isConnected
-    }
+    val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val network = manager.activeNetwork ?: return false
+    val activeNetwork = manager.getNetworkCapabilities(network) ?: return false
+    return activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
 }
 
 fun Context.openConnectivitySettings() {
     try {
         val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
         this.startActivity(intent)
-    } catch (_: Exception) { }
+    } catch (_: Exception) {
+    }
 }
