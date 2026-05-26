@@ -7,7 +7,6 @@ import androidx.navigation.toRoute
 import com.johny.mediaverse.core.domain.utils.onError
 import com.johny.mediaverse.core.domain.utils.onSuccess
 import com.johny.mediaverse.core.navigation.Destination
-import com.johny.mediaverse.domain.model.movie_details.MovieDetailsModel
 import com.johny.mediaverse.domain.repository.MovieDetailsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,9 +36,12 @@ class MovieDetailsViewModel(
                     )
                 }
             }
-            .onError {
+            .onError { error ->
                 state.update {
-                    it.copy(isLoading = false)
+                    it.copy(
+                        isLoading = false,
+                        error = error
+                    )
                 }
             }
     }

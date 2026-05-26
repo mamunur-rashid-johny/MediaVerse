@@ -1,5 +1,6 @@
 package com.johny.mediaverse.presentation.movie_details
 
+import com.johny.mediaverse.core.domain.utils.NetworkError
 import com.johny.mediaverse.domain.model.movie_details.MovieDetailsModel
 
 /**
@@ -8,5 +9,6 @@ import com.johny.mediaverse.domain.model.movie_details.MovieDetailsModel
  */
 data class MovieDetailsState(
     val isLoading: Boolean = false,
-    val movieDetails: MovieDetailsModel? = null
+    val movieDetails: MovieDetailsModel? = null,
+    val error: NetworkError? = null
 )

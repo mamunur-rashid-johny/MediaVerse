@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -44,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -51,6 +51,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.johny.mediaverse.R
+import com.johny.mediaverse.core.presentation.utils.toString
 import com.johny.mediaverse.core.utils.Constants
 import com.johny.mediaverse.domain.config.PosterSize
 import com.johny.mediaverse.domain.model.movie_details.GenreModel
@@ -69,16 +70,30 @@ fun MovieDetailsScreen(
     modifier: Modifier = Modifier,
     state: MovieDetailsState
 ) {
+    val context = LocalContext.current
 
     when {
         state.movieDetails == null || state.isLoading -> {
-            Box(modifier = Modifier.fillMaxSize()) {
-                LoadingIndicator(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.primary
-                )
+            if (state.isLoading) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    LoadingIndicator(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .align(Alignment.Center),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            } else {
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = state.error?.toString(context) ?: "",
+                        style = MaterialTheme.typography.labelLarge,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
 
