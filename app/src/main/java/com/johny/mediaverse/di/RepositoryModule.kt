@@ -10,6 +10,8 @@ import com.johny.mediaverse.data.repository.MovieRepositoryImp
 import com.johny.mediaverse.data.repository.PodcastDetailsRepositoryImp
 import com.johny.mediaverse.data.repository.PodcastRepositoryImp
 import com.johny.mediaverse.data.repository.SeasonRepositoryImpl
+import com.johny.mediaverse.data.repository.TrendingApiImpl
+import com.johny.mediaverse.data.repository.TrendingRepositoryImpl
 import com.johny.mediaverse.data.repository.TvShowApiImp
 import com.johny.mediaverse.data.repository.TvShowDetailsRepositoryImpl
 import com.johny.mediaverse.data.repository.TvShowRepositoryImp
@@ -23,6 +25,8 @@ import com.johny.mediaverse.domain.repository.PodcastRepository
 import com.johny.mediaverse.domain.repository.SeasonRepository
 import com.johny.mediaverse.domain.repository.SimilarTvShowApi
 import com.johny.mediaverse.domain.repository.SimilarTvShowApiImpl
+import com.johny.mediaverse.domain.repository.TrendingApi
+import com.johny.mediaverse.domain.repository.TrendingRepository
 import com.johny.mediaverse.domain.repository.TvShowApi
 import com.johny.mediaverse.domain.repository.TvShowDetailsRepository
 import com.johny.mediaverse.domain.repository.TvShowRepository
@@ -44,4 +48,6 @@ val repositoryModule = module {
     singleOf(::TvShowDetailsRepositoryImpl).bind<TvShowDetailsRepository>()
     singleOf(::SeasonRepositoryImpl).bind<SeasonRepository>()
     singleOf(::SimilarTvShowApiImpl).bind<SimilarTvShowApi>()
+    singleOf(::TrendingApiImpl).bind<TrendingApi>()
+    singleOf(::TrendingRepositoryImpl).bind<TrendingRepository>()
 }

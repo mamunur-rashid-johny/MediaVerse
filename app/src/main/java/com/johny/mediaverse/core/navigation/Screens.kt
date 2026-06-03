@@ -45,11 +45,13 @@ sealed interface Destination {
     data object SettingsRoute : Destination
 
     @Serializable
+    data object TrendingRoute : Destination
+
+    @Serializable
     data class WebViewRoute(val url: String, val title: String?) : Destination
 
 }
 
-//These Item Used to Create Bottom Navigation Bar
 sealed class BottomNavItem(
     @param:StringRes val title: Int,
     @param:DrawableRes val iconSelected: Int,
@@ -69,7 +71,7 @@ sealed class BottomNavItem(
         R.string.tv_show,
         R.drawable.tv_show_selected,
         R.drawable.tv_show,
-        color = Color(0xFFFA6FFF) ,
+        color = Color(0xFFFA6FFF),
         Destination.TvShowRoute
     )
 
@@ -87,5 +89,13 @@ sealed class BottomNavItem(
         R.drawable.bookmark,
         color = Color(0xFF009688),
         Destination.BookmarkRoute
+    )
+
+    data object Trending : BottomNavItem(
+        R.string.trending,
+        R.drawable.trending_selected,
+        R.drawable.trending,
+        color = Color(0xFF009688),
+        Destination.TrendingRoute
     )
 }

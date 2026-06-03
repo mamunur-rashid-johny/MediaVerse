@@ -6,15 +6,14 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.johny.mediaverse.data.local.dao.PodcastDao
 import com.johny.mediaverse.data.mapper.toPodcastEntity
-import com.johny.mediaverse.domain.paging_source.PodcastPagingSource
+import com.johny.mediaverse.data.mapper.toPodcasts
+import com.johny.mediaverse.domain.paging_source.GenericPagingSource
 import com.johny.mediaverse.domain.model.podcast.Podcast
 import com.johny.mediaverse.domain.repository.ListenNoteApi
 import com.johny.mediaverse.domain.repository.PodcastRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class PodcastRepositoryImp(
     private val api: ListenNoteApi,
     private val dao: PodcastDao,
@@ -28,7 +27,13 @@ class PodcastRepositoryImp(
                 prefetchDistance = 5
             ),
             pagingSourceFactory = {
-                PodcastPagingSource(api,context)
+                GenericPagingSource(
+                    context = context,
+                    fetch = { page -> api.getPodcastsPaged(page) },
+                    itemsOf = { it.podcasts },
+                    hasNextPage = { response, _ -> response.has_next },
+                    mapper = { it.toPodcasts() },
+                )
             }
         ).flow
     }

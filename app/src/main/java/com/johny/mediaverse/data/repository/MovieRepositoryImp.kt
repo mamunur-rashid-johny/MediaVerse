@@ -6,8 +6,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.johny.mediaverse.data.local.dao.MovieDao
 import com.johny.mediaverse.data.local.model.movie.MovieEntity
+import com.johny.mediaverse.data.mapper.toMovieModel
 import com.johny.mediaverse.domain.model.movie.MovieModel
-import com.johny.mediaverse.domain.paging_source.MoviePagingSource
+import com.johny.mediaverse.domain.paging_source.GenericPagingSource
 import com.johny.mediaverse.domain.repository.MovieDbApi
 import com.johny.mediaverse.domain.repository.MovieRepository
 import kotlinx.coroutines.flow.Flow
@@ -26,7 +27,14 @@ class MovieRepositoryImp(
                 prefetchDistance = 5
             ),
             pagingSourceFactory = {
-                MoviePagingSource(api, context)
+                GenericPagingSource(
+                    context = context,
+                    fetch = { page -> api.getMoviePaged(page) },
+                    itemsOf = { it.results },
+                    hasNextPage = { response, page -> page < response.total_pages },
+                    mapper = { it.toMovieModel() },
+                    idSelector = { it.id },
+                )
             }
         ).flow
     }

@@ -5,6 +5,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -18,7 +19,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 
-val bottomNavItem = listOf(BottomNavItem.Movie, BottomNavItem.TvShow, BottomNavItem.Podcast, BottomNavItem.Bookmark)
+val bottomNavItem = listOf(BottomNavItem.Movie, BottomNavItem.TvShow, BottomNavItem.Podcast, BottomNavItem.Trending, BottomNavItem.Bookmark)
 
 @Composable
 fun BottomBar(
@@ -57,7 +58,10 @@ fun BottomBar(
                             )
                         },
                         label = {
-                            Text(text = stringResource(id = des.title))
+                            Text(
+                                text = stringResource(id = des.title),
+                                style = MaterialTheme.typography.labelSmall
+                            )
                         }
                     )
                 }

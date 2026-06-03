@@ -6,8 +6,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.johny.mediaverse.data.local.dao.TvShowDao
 import com.johny.mediaverse.data.mapper.toMovieEntity
+import com.johny.mediaverse.data.mapper.toTvShowModel
 import com.johny.mediaverse.domain.model.tv_show.TvShowModel
-import com.johny.mediaverse.domain.paging_source.TvShowPagingSource
+import com.johny.mediaverse.domain.paging_source.GenericPagingSource
 import com.johny.mediaverse.domain.repository.TvShowApi
 import com.johny.mediaverse.domain.repository.TvShowRepository
 import kotlinx.coroutines.flow.Flow
@@ -26,7 +27,14 @@ class TvShowRepositoryImp(
                 prefetchDistance = 5
             ),
             pagingSourceFactory = {
-                TvShowPagingSource(api, context)
+                GenericPagingSource(
+                    context = context,
+                    fetch = { page -> api.getPagedTvShow(page) },
+                    itemsOf = { it.results },
+                    hasNextPage = { response, page -> page < response.total_pages },
+                    mapper = { it.toTvShowModel() },
+                    idSelector = { it.id },
+                )
             }
         ).flow
     }

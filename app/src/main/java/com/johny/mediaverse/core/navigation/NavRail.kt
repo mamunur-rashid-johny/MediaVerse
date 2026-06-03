@@ -22,7 +22,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 val railNavItem =
-    listOf(BottomNavItem.Movie, BottomNavItem.TvShow, BottomNavItem.Podcast, BottomNavItem.Bookmark)
+    listOf(BottomNavItem.Movie, BottomNavItem.TvShow, BottomNavItem.Podcast, BottomNavItem.Trending, BottomNavItem.Bookmark)
 
 @Composable
 fun NavRail(

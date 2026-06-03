@@ -18,6 +18,7 @@ import com.johny.mediaverse.presentation.on_board.OnBoardRoute
 import com.johny.mediaverse.presentation.podcast.PodcastRoute
 import com.johny.mediaverse.presentation.podcast_details.PodcastDetailsRoute
 import com.johny.mediaverse.presentation.settings.SettingsRoute
+import com.johny.mediaverse.presentation.trending.TrendingRoute
 import com.johny.mediaverse.presentation.tv_show.TvShowRoute
 import com.johny.mediaverse.presentation.tv_show_details.TvShowDetailsRoute
 import com.johny.mediaverse.presentation.tv_show_season_details.TvShowSeasonDetailsRoute
@@ -90,6 +91,9 @@ fun MediaVerseApp(
         }
         composable<Destination.WebViewRoute> {
             WebViewRoute(navController = navController)
+        }
+        composable<Destination.TrendingRoute> {
+            TrendingRoute(navController = navController)
         }
     }
 }

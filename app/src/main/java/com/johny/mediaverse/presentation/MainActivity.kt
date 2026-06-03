@@ -94,7 +94,8 @@ fun App(
             Destination.MovieRoute::class.qualifiedName,
             Destination.TvShowRoute::class.qualifiedName,
             Destination.PodcastRoute::class.qualifiedName,
-            Destination.BookmarkRoute::class.qualifiedName
+            Destination.BookmarkRoute::class.qualifiedName,
+            Destination.TrendingRoute::class.qualifiedName
         )
     }
     val bottomBarState = currentRoute in bottomBarRoutes

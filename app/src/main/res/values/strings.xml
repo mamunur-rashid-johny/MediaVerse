@@ -19,4 +19,5 @@
     <string name="podcast_on_board_title">Listen to Podcasts</string>
     <string name="podcast_on_board_description">Discover podcasts across every genre and topic.</string>
     <string name="media_notification_channel">Media Playback</string>
+    <string name="trending">Trending</string>
 </resources>

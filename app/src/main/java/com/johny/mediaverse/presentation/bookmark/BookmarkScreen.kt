@@ -1,6 +1,11 @@
 package com.johny.mediaverse.presentation.bookmark
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -32,36 +37,43 @@ fun BookmarkScreen(
                 .fillMaxWidth()
                 .padding(8.dp)
         )
-        when (state.selectedTabIndex) {
-            0 -> MovieBookmarkRoute(
-                modifier = modifier.weight(1f),
-                onItemClick = {
-                    onIntent(BookmarkIntent.OnNavigateToMovieDetails(it))
-                },
-                onNavigateToMovie = {
-                    onIntent(BookmarkIntent.OnNavigateToMovie)
-                }
-            )
+        AnimatedContent(
+            targetState = state.selectedTabIndex,
+            transitionSpec = { fadeIn() togetherWith fadeOut() },
+            modifier = modifier.weight(1f),
+            label = "BookmarkTabContent"
+        ) { selectedTabIndex ->
+            when (selectedTabIndex) {
+                0 -> MovieBookmarkRoute(
+                    modifier = Modifier.fillMaxSize(),
+                    onItemClick = {
+                        onIntent(BookmarkIntent.OnNavigateToMovieDetails(it))
+                    },
+                    onNavigateToMovie = {
+                        onIntent(BookmarkIntent.OnNavigateToMovie)
+                    }
+                )
 
-            1 -> TvShowBookmarkRoute(
-                modifier = modifier.weight(1f),
-                onItemClick = {
-                    onIntent(BookmarkIntent.OnNavigateToTvShowDetails(it))
-                },
-                onNavigateToTvShow = {
-                    onIntent(BookmarkIntent.OnNavigateToTvShow)
-                }
-            )
+                1 -> TvShowBookmarkRoute(
+                    modifier = Modifier.fillMaxSize(),
+                    onItemClick = {
+                        onIntent(BookmarkIntent.OnNavigateToTvShowDetails(it))
+                    },
+                    onNavigateToTvShow = {
+                        onIntent(BookmarkIntent.OnNavigateToTvShow)
+                    }
+                )
 
-            2 -> PodcastBookmarkRoute(
-                modifier = modifier.weight(1f),
-                onItemClick = {
-                    onIntent(BookmarkIntent.OnNavigateToPodcastDetails(it))
-                },
-                onNavigateToPodcast = {
-                    onIntent(BookmarkIntent.OnNavigateToPodcast)
-                }
-            )
+                2 -> PodcastBookmarkRoute(
+                    modifier = Modifier.fillMaxSize(),
+                    onItemClick = {
+                        onIntent(BookmarkIntent.OnNavigateToPodcastDetails(it))
+                    },
+                    onNavigateToPodcast = {
+                        onIntent(BookmarkIntent.OnNavigateToPodcast)
+                    }
+                )
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ import com.johny.mediaverse.presentation.movie_details.MovieDetailsViewModel
 import com.johny.mediaverse.presentation.on_board.OnBoardViewModel
 import com.johny.mediaverse.presentation.podcast.PodcastViewModel
 import com.johny.mediaverse.presentation.podcast_details.PodcastDetailsViewModel
+import com.johny.mediaverse.presentation.trending.TrendingViewModel
 import com.johny.mediaverse.presentation.tv_show.TvShowViewModel
 import com.johny.mediaverse.presentation.tv_show_details.TvShowDetailsViewModel
 import com.johny.mediaverse.presentation.tv_show_season_details.TvShowSeasonDetailsViewModel
@@ -25,7 +26,6 @@ val viewModelModule = module {
     viewModelOf(::PodcastDetailsViewModel)
     viewModelOf(::AudioPlayerViewModel)
     viewModelOf(::PodcastBookmarkViewModel)
-    viewModelOf(::MovieViewModel)
     viewModelOf(::MovieDetailsViewModel)
     viewModelOf(::WebViewViewModel)
     viewModelOf(::MovieBookmarkViewModel)
@@ -35,4 +35,5 @@ val viewModelModule = module {
     viewModelOf(::MovieDetailsViewModel)
     viewModelOf(::TvShowDetailsViewModel)
     viewModelOf(::TvShowSeasonDetailsViewModel)
+    viewModelOf(::TrendingViewModel)
 }
