@@ -2,12 +2,10 @@ package com.johny.mediaverse.presentation.podcast
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LoadingIndicator
@@ -15,12 +13,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.johny.mediaverse.core.navigation.LocalScaffoldPadding
+import com.johny.mediaverse.core.presentation.components.AnimatedGradientText
 import com.johny.mediaverse.core.presentation.components.EmptyOrErrorScreen
 import com.johny.mediaverse.core.presentation.components.ErrorRow
 import com.johny.mediaverse.core.presentation.components.LoadingRow
@@ -61,7 +59,6 @@ fun PodcastScreen(
 
         else -> {
             val scaffoldPadding = LocalScaffoldPadding.current
-            val layoutDirection = LocalLayoutDirection.current
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(
@@ -71,6 +68,14 @@ fun PodcastScreen(
                     bottom = scaffoldPadding.calculateBottomPadding() + 20.dp
                 )
             ) {
+
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        AnimatedGradientText(text = "Discover Podcasts")
+                    }
+                }
                 items(
                     count = podcasts.itemCount,
                     key = podcasts.itemKey { it.podcast.id }

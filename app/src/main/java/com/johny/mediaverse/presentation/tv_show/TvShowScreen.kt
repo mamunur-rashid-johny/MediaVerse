@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -23,6 +24,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.johny.mediaverse.core.navigation.LocalScaffoldPadding
+import com.johny.mediaverse.core.presentation.components.AnimatedGradientText
 import com.johny.mediaverse.core.presentation.components.EmptyOrErrorScreen
 import com.johny.mediaverse.core.presentation.components.ErrorRow
 import com.johny.mediaverse.core.presentation.components.LoadingRow
@@ -75,6 +77,16 @@ fun TvShowScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 columns = GridCells.Fixed(2)
             ) {
+
+                item(
+                    span = { GridItemSpan(maxLineSpan) }
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        AnimatedGradientText(text = "Discover TV Shows")
+                    }
+                }
 
                 items(
                     count = tvShows.itemCount,

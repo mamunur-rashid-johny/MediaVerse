@@ -5,10 +5,8 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -56,12 +54,6 @@ fun BottomBar(
                                 contentDescription = stringResource(des.title),
                                 modifier = Modifier.size(20.dp),
                             )
-                        },
-                        label = {
-                            Text(
-                                text = stringResource(id = des.title),
-                                style = MaterialTheme.typography.labelSmall
-                            )
                         }
                     )
                 }
@@ -69,80 +61,3 @@ fun BottomBar(
         }
     )
 }
-//@Composable
-//fun BottomBar(
-//    visibility: Boolean,
-//    navController: NavController,
-//    hazeState: HazeState
-//) {
-//    val glassStyle = getGlassStyle()
-//    AnimatedVisibility(
-//        visible = visibility,
-//        enter = expandVertically(),
-//        exit = shrinkVertically(),
-//        content = {
-//            NavigationBar(
-//                modifier = Modifier
-//                    .hazeChild(
-//                        state = hazeState,
-//                        style = glassStyle
-//                    )
-//                    .fillMaxWidth(),
-//                containerColor = Color.Transparent,
-//                tonalElevation = 0.dp
-//            ) {
-//                val backStackEntry by navController.currentBackStackEntryAsState()
-//                val currentRouteString = backStackEntry?.destination?.route
-//
-//                bottomNavItem.forEach { des ->
-//                    val isSelected = currentRouteString == des.route::class.qualifiedName
-//                    NavigationBarItem(
-//                        selected = isSelected,
-//                        colors = NavigationBarItemDefaults.colors(
-//                            selectedIconColor = MaterialTheme.colorScheme.primary,
-//                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-//                            selectedTextColor = MaterialTheme.colorScheme.primary,
-//                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-//                            indicatorColor = Color.Transparent
-//                        ),
-//                        onClick = {
-//                            navController.navigate(des.route) {
-//                                navController.graph.startDestinationRoute?.let { route ->
-//                                    popUpTo(route) {
-//                                        saveState = true
-//                                    }
-//                                    launchSingleTop = true
-//                                    restoreState = true
-//                                }
-//                            }
-//                        },
-//                        icon = {
-//                            Icon(
-//                                painter = painterResource(id = if (isSelected) des.iconSelected else des.iconUnselected),
-//                                contentDescription = stringResource(des.title),
-//                                modifier = Modifier.size(20.dp),
-//                            )
-//                        },
-//                        label = {
-//                            Text(text = stringResource(id = des.title))
-//                        }
-//                    )
-//                }
-//            }
-//        }
-//    )
-//}
-//
-//@Composable
-//fun getGlassStyle(): HazeStyle {
-//    val isDark = isSystemInDarkTheme()
-//    return HazeStyle(
-//        blurRadius = 20.dp,
-//        tint = if (isDark) {
-//            Color.Black.copy(alpha = 0.4f)
-//        } else {
-//            Color.White.copy(alpha = 0.2f)
-//        },
-//        noiseFactor = if (isDark) 0.15f else 0.05f
-//    )
-//}
