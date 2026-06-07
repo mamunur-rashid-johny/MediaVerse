@@ -15,7 +15,7 @@ fun ResultDto.toTvShowModel(): TvShowModel{
     )
 }
 
-fun TvShowModel.toMovieEntity(): TvShowEntity {
+fun TvShowModel.toTvShowEntity(): TvShowEntity {
     return TvShowEntity(
         id = this.id,
         title = this.title,

@@ -14,11 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import com.johny.mediaverse.core.navigation.LocalScaffoldPadding
 import com.johny.mediaverse.core.presentation.components.EmptyOrErrorScreen
 import com.johny.mediaverse.core.presentation.components.ErrorRow
 import com.johny.mediaverse.core.presentation.components.LoadingRow
-import com.johny.mediaverse.domain.model.trending.TrendingModel
 
 /**
  * Created by Johny on 27/5/26.
@@ -28,7 +28,8 @@ import com.johny.mediaverse.domain.model.trending.TrendingModel
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TrendingScreen(
-    trending: LazyPagingItems<TrendingModel>
+    trending: LazyPagingItems<TrendingUiModel>,
+    onIntent: (TrendingIntent) -> Unit
 ) {
 
     when {
@@ -40,7 +41,9 @@ fun TrendingScreen(
                     ?: "Unknown error occurred, try again!",
                 primaryLabel = "Retry",
                 modifier = Modifier.fillMaxSize()
-            ) {}
+            ) {
+                onIntent(TrendingIntent.RetryPaginationIntent)
+            }
         }
 
         trending.loadState.refresh is LoadState.Loading && trending.itemCount == 0 -> {
@@ -65,10 +68,16 @@ fun TrendingScreen(
                     bottom = scaffoldPadding.calculateBottomPadding() + 20.dp
                 )
             ) {
-                items(count = trending.itemCount) { index ->
+                items(
+                    count = trending.itemCount,
+                    key = trending.itemKey { it.trending.id }
+                ) { index ->
                     val item = trending[index]
-                    if (item != null) {
-                        TrendingItem(model = item, onClick = {})
+                    item?.let {
+                        TrendingItem(
+                            model = item,
+                            onIntent = onIntent
+                        )
                     }
                 }
 

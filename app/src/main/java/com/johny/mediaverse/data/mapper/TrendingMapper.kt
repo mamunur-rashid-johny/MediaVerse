@@ -1,5 +1,7 @@
 package com.johny.mediaverse.data.mapper
 
+import com.johny.mediaverse.data.local.model.movie.MovieEntity
+import com.johny.mediaverse.data.local.model.tv_show.TvShowEntity
 import com.johny.mediaverse.data.model.trending.TrendingDto
 import com.johny.mediaverse.domain.model.trending.TrendingModel
 
@@ -8,7 +10,7 @@ import com.johny.mediaverse.domain.model.trending.TrendingModel
  * Copyright (c) 2026 Pathao Ltd. All rights reserved.
  */
 
-fun TrendingDto.toTrendingModel(): TrendingModel{
+fun TrendingDto.toTrendingModel(): TrendingModel {
     return TrendingModel(
         adult = this.adult,
         backdropPath = this.backdrop_path,
@@ -24,5 +26,25 @@ fun TrendingDto.toTrendingModel(): TrendingModel{
         video = this.video,
         voteAverage = this.vote_average,
         voteCount = this.vote_count
+    )
+}
+
+fun TrendingModel.toMovieEntity(): MovieEntity {
+    return MovieEntity(
+        id = this.id,
+        title = this.title,
+        rating = this.voteAverage,
+        releaseDate = this.releaseDate,
+        posterPath = this.backdropPath ?: ""
+    )
+}
+
+fun TrendingModel.toTvShowEntity(): TvShowEntity {
+    return TvShowEntity(
+        id = this.id,
+        title = this.title,
+        rating = this.voteAverage,
+        releaseDate = this.releaseDate,
+        posterPath = this.backdropPath ?: ""
     )
 }

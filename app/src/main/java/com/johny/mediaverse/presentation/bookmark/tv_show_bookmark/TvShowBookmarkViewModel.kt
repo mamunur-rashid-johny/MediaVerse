@@ -3,7 +3,7 @@ package com.johny.mediaverse.presentation.bookmark.tv_show_bookmark
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.johny.mediaverse.data.mapper.toMovieEntity
+import com.johny.mediaverse.data.mapper.toTvShowEntity
 import com.johny.mediaverse.domain.model.tv_show.TvShowModel
 import com.johny.mediaverse.domain.repository.BookmarkRepository
 import com.johny.mediaverse.presentation.bookmark.tv_show_bookmark.TvShowBookmarkEffect.*
@@ -46,6 +46,6 @@ class TvShowBookmarkViewModel(
         repository.removeTvShowBookmark(tvShowModel.id)
     }
     private fun undoBookmark(tvShowModel:TvShowModel)=viewModelScope.launch(Dispatchers.IO){
-        repository.undoTvShow(tvShowModel.toMovieEntity())
+        repository.undoTvShow(tvShowModel.toTvShowEntity())
     }
 }

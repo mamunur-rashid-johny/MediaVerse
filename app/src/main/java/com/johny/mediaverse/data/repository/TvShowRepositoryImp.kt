@@ -5,7 +5,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.johny.mediaverse.data.local.dao.TvShowDao
-import com.johny.mediaverse.data.mapper.toMovieEntity
+import com.johny.mediaverse.data.mapper.toTvShowEntity
 import com.johny.mediaverse.data.mapper.toTvShowModel
 import com.johny.mediaverse.domain.model.tv_show.TvShowModel
 import com.johny.mediaverse.domain.paging_source.GenericPagingSource
@@ -45,7 +45,7 @@ class TvShowRepositoryImp(
     }
 
     override suspend fun saveBookmark(tvShow: TvShowModel) {
-        dao.saveTvShow(tvShow.toMovieEntity())
+        dao.saveTvShow(tvShow.toTvShowEntity())
     }
 
     override suspend fun removeBookmark(tvShowId: Int) {

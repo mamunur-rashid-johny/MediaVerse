@@ -8,5 +8,4 @@ sealed interface MovieIntent {
     data class RemoveBookmarkIntent(val movieId: Int) : MovieIntent
     data class OnMovieDetailsNavigateIntent(val movieId: Int) : MovieIntent
     data object OnRetryPagination: MovieIntent
-
 }

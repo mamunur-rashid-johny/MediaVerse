@@ -81,8 +81,8 @@ fun MovieScreen(
                     count = movies.itemCount,
                     key = movies.itemKey { it.movie.id }
                 ) { index ->
-                    val podcast = movies[index]
-                    podcast?.let {
+                    val movies = movies[index]
+                    movies?.let {
                         MovieGridItem(
                             movieUi = it,
                             onIntent = onIntent

@@ -225,3 +225,23 @@ fun Context.openConnectivitySettings() {
     } catch (_: Exception) {
     }
 }
+
+fun String.toMediaType(): MediaTypeEnum {
+    return when {
+        this.equals("movie", ignoreCase = true) -> {
+            MediaTypeEnum.MOVIE
+        }
+
+        this.equals("tv", ignoreCase = true) -> {
+            MediaTypeEnum.TV
+        }
+
+        this.equals("person", ignoreCase = true) -> {
+            MediaTypeEnum.PERSON
+        }
+
+        else -> {
+            MediaTypeEnum.NONE
+        }
+    }
+}

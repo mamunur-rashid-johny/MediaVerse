@@ -7,7 +7,7 @@ import androidx.paging.PagingData
 import com.johny.mediaverse.core.domain.utils.NetworkError
 import com.johny.mediaverse.core.domain.utils.Result
 import com.johny.mediaverse.data.local.dao.TvShowDao
-import com.johny.mediaverse.data.mapper.toMovieEntity
+import com.johny.mediaverse.data.mapper.toTvShowEntity
 import com.johny.mediaverse.data.mapper.toTvShowModel
 import com.johny.mediaverse.domain.model.tv_show.TvShowModel
 import com.johny.mediaverse.domain.model.tv_show_details.TvShowDetailsModel
@@ -56,7 +56,7 @@ class TvShowDetailsRepositoryImpl(
     }
 
     override suspend fun saveBookmark(tvShow: TvShowModel) {
-        dao.saveTvShow(tvShow.toMovieEntity())
+        dao.saveTvShow(tvShow.toTvShowEntity())
     }
 
     override suspend fun removeBookmark(tvShowId: Int) {
