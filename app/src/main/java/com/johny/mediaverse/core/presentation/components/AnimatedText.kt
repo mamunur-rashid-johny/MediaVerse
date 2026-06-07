@@ -104,3 +104,15 @@ fun PreviewScreen() {
         AnimatedGradientText(text = "Discover Trending Movies")
     }
 }
+
+@Preview
+@Composable
+fun PreviewScreenOne() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.dp)
+    ) {
+        AnimatedSolidColorText(text = "Discover Trending Movies")
+    }
+}
